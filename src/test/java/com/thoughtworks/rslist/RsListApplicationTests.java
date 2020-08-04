@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -89,6 +90,24 @@ class RsListApplicationTests {
                 .andExpect(jsonPath("$[2].keyword").value("关键词3"))
                 .andExpect(jsonPath("$[3].eventName").value("第四条事件"))
                 .andExpect(jsonPath("$[3].keyword").value("关键词4"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void should_success_when_update_rs_event() throws Exception {
+        RsEvent rsEvent = new RsEvent("更新事件", "更新关键词");
+        ObjectMapper objectMapper = new ObjectMapper();
+        String postBody = objectMapper.writeValueAsString(rsEvent);
+
+        mockMvc.perform(put("/rs/event?index=1").content(postBody).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(jsonPath("$[0].eventName").value("更新事件"))
+                .andExpect(jsonPath("$[0].keyword").value("更新关键词"))
+                .andExpect(jsonPath("$[1].eventName").value("第二条事件"))
+                .andExpect(jsonPath("$[1].keyword").value("关键词2"))
+                .andExpect(jsonPath("$[2].eventName").value("第三条事件"))
+                .andExpect(jsonPath("$[2].keyword").value("关键词3"))
                 .andExpect(status().isOk());
     }
 }
