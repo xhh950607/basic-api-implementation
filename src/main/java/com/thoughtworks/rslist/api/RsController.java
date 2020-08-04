@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 
 @RestController
 public class RsController {
-    private List<RsEvent> rsList = Stream.of(
+    private static List<RsEvent> rsList = Stream.of(
             new RsEvent("第一条事件", "关键词1"),
             new RsEvent("第二条事件", "关键词2"),
             new RsEvent("第三条事件", "关键词3")).collect(Collectors.toList());
@@ -33,7 +33,13 @@ public class RsController {
     }
 
     @PutMapping("/rs/event")
-    public void updateRsEvent(@RequestParam int index, @RequestBody RsEvent rsEvent) {
-        rsList.set(index - 1, rsEvent);
+    public void updateRsEvent(@RequestParam int index, @RequestBody RsEvent newRsEvent) {
+        RsEvent oldRsEvent = rsList.get(index - 1);
+        String newEventName = newRsEvent.getEventName();
+        String newKeyword = newRsEvent.getKeyword();
+        if (newEventName != null)
+            oldRsEvent.setEventName(newEventName);
+        if (newKeyword != null)
+            oldRsEvent.setKeyword(newKeyword);
     }
 }
