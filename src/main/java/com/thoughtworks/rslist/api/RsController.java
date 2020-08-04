@@ -42,4 +42,10 @@ public class RsController {
         if (newKeyword != null)
             oldRsEvent.setKeyword(newKeyword);
     }
+
+    @DeleteMapping("/rs/event")
+    public void deleteRsEvent(@RequestParam int index) {
+        rsList.remove(index - 1);
+    }
+
 }

@@ -145,4 +145,16 @@ class RsListApplicationTests {
                 .andExpect(jsonPath("$[2].keyword").value("关键词3"))
                 .andExpect(status().isOk());
     }
+
+    @Test
+    void should_success_when_delete_rs_by_index() throws Exception {
+        mockMvc.perform(delete("/rs/event?index=1"))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(jsonPath("$[0].eventName").value("第二条事件"))
+                .andExpect(jsonPath("$[0].keyword").value("关键词2"))
+                .andExpect(jsonPath("$[1].eventName").value("第三条事件"))
+                .andExpect(jsonPath("$[1].keyword").value("关键词3"))
+                .andExpect(status().isOk());
+    }
 }
