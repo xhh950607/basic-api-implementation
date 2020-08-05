@@ -75,7 +75,7 @@ public class RsController {
     }
 
     @PutMapping("/rs/{index}")
-    public void updateRsEvent(@PathVariable int index, @RequestBody RsEvent newRsEvent) {
+    public ResponseEntity<Void> updateRsEvent(@PathVariable int index, @RequestBody RsEvent newRsEvent) {
         RsEvent oldRsEvent = rsList.get(index);
         String newEventName = newRsEvent.getEventName();
         String newKeyword = newRsEvent.getKeyword();
@@ -83,11 +83,13 @@ public class RsController {
             oldRsEvent.setEventName(newEventName);
         if (newKeyword != null)
             oldRsEvent.setKeyword(newKeyword);
+        return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
     @DeleteMapping("/rs/{index}")
-    public void deleteRsEvent(@PathVariable int index) {
+    public ResponseEntity<Void> deleteRsEvent(@PathVariable int index) {
         rsList.remove(index);
+        return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
 }
