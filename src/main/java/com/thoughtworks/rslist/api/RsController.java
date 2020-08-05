@@ -48,7 +48,7 @@ public class RsController {
 
     @GetMapping("/rs/list")
     public ResponseEntity<List<RsEvent>> getRsListBetween(@RequestParam(required = false) Integer start,
-                                          @RequestParam(required = false) Integer end) {
+                                                          @RequestParam(required = false) Integer end) {
         List<RsEvent> res;
         if (start == null || end == null)
             res = rsList;
@@ -58,12 +58,15 @@ public class RsController {
     }
 
     @PostMapping("/rs")
-    public void addRsEvent(@RequestBody @Valid RsEvent rsEvent) {
+    public ResponseEntity<Void> addRsEvent(@RequestBody @Valid RsEvent rsEvent) {
         User user = rsEvent.getUser();
         if (!isRegistered(user)) {
             userList.add(user);
         }
         rsList.add(rsEvent);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .header("index", rsList.indexOf(rsEvent) + "")
+                .body(null);
     }
 
     private boolean isRegistered(User user) {

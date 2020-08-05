@@ -72,7 +72,8 @@ class RsListApplicationTests {
         String postBody = "{\"eventName\":\"第四条事件\",\"keyword\":\"关键词4\",\"user\":{\"userName\":\"Bob\",\"age\":20,\"gender\":\"male\",\"email\":\"234@qq.com\",\"phone\":\"12345678902\"}}";
 
         mockMvc.perform(post("/rs").content(postBody).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated())
+                .andExpect(header().string("index", "3"));
         Assertions.assertEquals(4, RsController.rsList.size());
         Assertions.assertEquals(1, RsController.userList.size());
     }
@@ -82,7 +83,8 @@ class RsListApplicationTests {
         String postBody = "{\"eventName\":\"第四条事件\",\"keyword\":\"关键词4\",\"user\":{\"userName\":\"Tom\",\"age\":19,\"gender\":\"male\",\"email\":\"123@qq.com\",\"phone\":\"12345678901\"}}";
 
         mockMvc.perform(post("/rs").content(postBody).contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated())
+                .andExpect(header().string("index", "3"));
         Assertions.assertEquals(4, RsController.rsList.size());
         Assertions.assertEquals(2, RsController.userList.size());
     }
