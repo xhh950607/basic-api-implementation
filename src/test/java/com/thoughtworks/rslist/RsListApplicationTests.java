@@ -1,5 +1,6 @@
 package com.thoughtworks.rslist;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.api.RsController;
 import com.thoughtworks.rslist.domain.RsEvent;
@@ -81,6 +82,15 @@ class RsListApplicationTests {
                 .andExpect(status().isOk());
         Assertions.assertEquals(4, RsController.rsList.size());
         Assertions.assertEquals(2, RsController.userList.size());
+    }
+
+    @Test
+    void should_bad_request_when_add_given_null_user() throws Exception {
+        RsEvent rsEvent = new RsEvent("新增事件", "关键词", null);
+        String postBody = objectMapper.writeValueAsString(rsEvent);
+
+        mockMvc.perform(post("/rs").content(postBody).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
