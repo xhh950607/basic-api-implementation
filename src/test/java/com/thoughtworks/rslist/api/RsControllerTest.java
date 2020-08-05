@@ -69,6 +69,13 @@ class RsControllerTest {
     }
 
     @Test
+    void should_return_400_invalid_request_param_when_get_list_given_out_bound_start_or_end() throws Exception {
+        mockMvc.perform(get("/rs/list?start=1&end=4"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("invalid request param"));
+    }
+
+    @Test
     void should_only_add_rs_when_add_given_registered_user() throws Exception {
         String postBody = "{\"eventName\":\"第四条事件\",\"keyword\":\"关键词4\",\"user\":{\"userName\":\"Bob\",\"age\":20,\"gender\":\"male\",\"email\":\"234@qq.com\",\"phone\":\"12345678902\"}}";
 

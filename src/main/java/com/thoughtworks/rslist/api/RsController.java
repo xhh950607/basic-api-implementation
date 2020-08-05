@@ -1,10 +1,11 @@
 package com.thoughtworks.rslist.api;
 
+import com.thoughtworks.rslist.domain.CommonError;
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
+import com.thoughtworks.rslist.exception.InvalidIndexException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -36,10 +37,12 @@ public class RsController {
 
     @GetMapping("/rs/list")
     public ResponseEntity<List<RsEvent>> getRsListBetween(@RequestParam(required = false) Integer start,
-                                                          @RequestParam(required = false) Integer end) {
+                                                          @RequestParam(required = false) Integer end) throws InvalidIndexException {
         List<RsEvent> res;
         if (start == null || end == null)
             res = rsList;
+        else if (start < 0 || end > rsList.size())
+            throw new InvalidIndexException("invalid request param");
         else
             res = rsList.subList(start, end);
         return ResponseEntity.status(HttpStatus.OK).body(res);
@@ -78,6 +81,12 @@ public class RsController {
     public ResponseEntity<Void> deleteRsEvent(@PathVariable int index) {
         rsList.remove(index);
         return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
+
+    @ExceptionHandler(InvalidIndexException.class)
+    public ResponseEntity<CommonError> handleInvalidException(InvalidIndexException ex) {
+        CommonError err = new CommonError(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
     }
 
 }
