@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class RsEvent {
     private String eventName;
+    @NotNull
     private String keyword;
     @NotNull
     private User user;
