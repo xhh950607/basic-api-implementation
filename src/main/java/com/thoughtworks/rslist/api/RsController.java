@@ -1,6 +1,7 @@
 package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.domain.RsEvent;
+import com.thoughtworks.rslist.domain.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -9,17 +10,30 @@ import java.util.stream.Stream;
 
 @RestController
 public class RsController {
-    private static List<RsEvent> rsList;
+    public static List<RsEvent> rsList;
+    public static List<User> userList;
 
     {
-        resetRsList();
+        resetData();
     }
 
-    public static void resetRsList() {
+    public static void resetData() {
+        resetRsList();
+        resetUserList();
+    }
+
+    private static void resetRsList() {
         rsList = Stream.of(
-                new RsEvent("第一条事件", "关键词1"),
-                new RsEvent("第二条事件", "关键词2"),
-                new RsEvent("第三条事件", "关键词3")).collect(Collectors.toList());
+                new RsEvent("第一条事件", "关键词1", null),
+                new RsEvent("第二条事件", "关键词2", null),
+                new RsEvent("第三条事件", "关键词3", null)
+        ).collect(Collectors.toList());
+    }
+
+    private static void resetUserList() {
+        userList = Stream.of(
+                new User("Bob", 11, "male", "234@qq.com", "12345678902")
+        ).collect(Collectors.toList());
     }
 
     @GetMapping("/rs/{index}")
