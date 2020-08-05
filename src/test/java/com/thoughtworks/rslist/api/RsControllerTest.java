@@ -1,5 +1,6 @@
 package com.thoughtworks.rslist.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
@@ -102,6 +103,16 @@ class RsControllerTest {
                 .andExpect(header().string("index", "3"));
         Assertions.assertEquals(4, RsController.rsList.size());
         Assertions.assertEquals(2, UserController.userList.size());
+    }
+
+    @Test
+    void should_return_400_invalid_param_when_add_given_invalid_rs() throws Exception {
+        RsEvent rsEvent = new RsEvent("新增事件", "关键词", null);
+        String postBody = objectMapper.writeValueAsString(rsEvent);
+
+        mockMvc.perform(post("/rs").content(postBody).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("invalid param"));
     }
 
     @Test
