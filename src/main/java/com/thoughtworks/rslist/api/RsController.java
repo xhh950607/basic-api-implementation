@@ -15,28 +15,16 @@ import java.util.stream.Stream;
 @RestController
 public class RsController {
     public static List<RsEvent> rsList;
-    public static List<User> userList;
 
     static {
-        resetData();
-    }
-
-    public static void resetData() {
         resetRsList();
-        resetUserList();
     }
 
-    private static void resetRsList() {
+    public static void resetRsList() {
         rsList = Stream.of(
                 new RsEvent("第一条事件", "关键词1", null),
                 new RsEvent("第二条事件", "关键词2", null),
                 new RsEvent("第三条事件", "关键词3", null)
-        ).collect(Collectors.toList());
-    }
-
-    private static void resetUserList() {
-        userList = Stream.of(
-                new User("Bob", 20, "male", "234@qq.com", "12345678902")
         ).collect(Collectors.toList());
     }
 
@@ -61,7 +49,7 @@ public class RsController {
     public ResponseEntity<Void> addRsEvent(@RequestBody @Valid RsEvent rsEvent) {
         User user = rsEvent.getUser();
         if (!isRegistered(user)) {
-            userList.add(user);
+            UserController.userList.add(user);
         }
         rsList.add(rsEvent);
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -70,7 +58,7 @@ public class RsController {
     }
 
     private boolean isRegistered(User user) {
-        return userList.stream()
+        return UserController.userList.stream()
                 .anyMatch(u -> u.getUserName().equals(user.getUserName()));
     }
 

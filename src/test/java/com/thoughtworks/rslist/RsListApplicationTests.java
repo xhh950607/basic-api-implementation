@@ -3,6 +3,7 @@ package com.thoughtworks.rslist;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.api.RsController;
+import com.thoughtworks.rslist.api.UserController;
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
 import org.junit.jupiter.api.Assertions;
@@ -28,7 +29,8 @@ class RsListApplicationTests {
 
     @BeforeEach
     void setUp() {
-        RsController.resetData();
+        RsController.resetRsList();
+        UserController.resetUserList();
     }
 
     @Test
@@ -75,7 +77,7 @@ class RsListApplicationTests {
                 .andExpect(status().isCreated())
                 .andExpect(header().string("index", "3"));
         Assertions.assertEquals(4, RsController.rsList.size());
-        Assertions.assertEquals(1, RsController.userList.size());
+        Assertions.assertEquals(1, UserController.userList.size());
     }
 
     @Test
@@ -86,7 +88,7 @@ class RsListApplicationTests {
                 .andExpect(status().isCreated())
                 .andExpect(header().string("index", "3"));
         Assertions.assertEquals(4, RsController.rsList.size());
-        Assertions.assertEquals(2, RsController.userList.size());
+        Assertions.assertEquals(2, UserController.userList.size());
     }
 
     @Test
@@ -100,7 +102,7 @@ class RsListApplicationTests {
 
     @Test
     void should_bad_request_when_add_given_null_keyword() throws Exception {
-        RsEvent rsEvent = new RsEvent("新增事件", null, RsController.userList.get(0));
+        RsEvent rsEvent = new RsEvent("新增事件", null, UserController.userList.get(0));
         String postBody = objectMapper.writeValueAsString(rsEvent);
 
         mockMvc.perform(post("/rs").content(postBody).contentType(MediaType.APPLICATION_JSON))
@@ -109,7 +111,7 @@ class RsListApplicationTests {
 
     @Test
     void should_bad_request_when_add_given_null_event_name() throws Exception {
-        RsEvent rsEvent = new RsEvent(null, "关键字", RsController.userList.get(0));
+        RsEvent rsEvent = new RsEvent(null, "关键字", UserController.userList.get(0));
         String postBody = objectMapper.writeValueAsString(rsEvent);
 
         mockMvc.perform(post("/rs").content(postBody).contentType(MediaType.APPLICATION_JSON))
