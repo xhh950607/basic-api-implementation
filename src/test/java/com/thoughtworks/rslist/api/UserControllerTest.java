@@ -41,4 +41,13 @@ class UserControllerTest {
         Assertions.assertEquals(2, UserController.userList.size());
     }
 
+    @Test
+    void should_return_400_invalid_user_when_add_given_invalid_user() throws Exception {
+        String postBody = "{\"age\":19,\"gender\":\"male\",\"email\":\"123@qq.com\",\"phone\":\"12345678901\"}";
+
+        mockMvc.perform(post("/user").content(postBody).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("invalid user"));
+    }
+
 }
