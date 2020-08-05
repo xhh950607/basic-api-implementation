@@ -103,6 +103,15 @@ class RsListApplicationTests {
     }
 
     @Test
+    void should_bad_request_when_add_given_null_event_name() throws Exception {
+        RsEvent rsEvent = new RsEvent(null, "关键字", RsController.userList.get(0));
+        String postBody = objectMapper.writeValueAsString(rsEvent);
+
+        mockMvc.perform(post("/rs").content(postBody).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     void should_update_eventName_and_keyword_when_both_not_null() throws Exception {
         RsEvent rsEvent = new RsEvent("更新事件", "更新关键词", null);
         String postBody = objectMapper.writeValueAsString(rsEvent);
