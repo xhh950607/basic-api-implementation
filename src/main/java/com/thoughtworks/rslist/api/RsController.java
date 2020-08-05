@@ -2,6 +2,8 @@ package com.thoughtworks.rslist.api;
 
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,8 +41,9 @@ public class RsController {
     }
 
     @GetMapping("/rs/{index}")
-    public RsEvent getOneRsByIndex(@PathVariable int index) {
-        return rsList.get(index);
+    public ResponseEntity<RsEvent> getOneRsByIndex(@PathVariable int index) {
+        RsEvent rs = rsList.get(index);
+        return ResponseEntity.status(HttpStatus.OK).body(rs);
     }
 
     @GetMapping("/rs/list")

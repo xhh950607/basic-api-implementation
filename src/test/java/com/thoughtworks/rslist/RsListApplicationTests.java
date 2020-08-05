@@ -36,6 +36,7 @@ class RsListApplicationTests {
         mockMvc.perform(get("/rs/1"))
                 .andExpect(jsonPath("$.eventName").value("第二条事件"))
                 .andExpect(jsonPath("$.keyword").value("关键词2"))
+                .andExpect(jsonPath("$.user").doesNotHaveJsonPath())
                 .andExpect(status().isOk());
     }
 
@@ -63,8 +64,7 @@ class RsListApplicationTests {
 
     @Test
     void should_only_add_rs_when_add_given_registered_user() throws Exception {
-        RsEvent rsEvent = new RsEvent("第四条事件", "关键词4", RsController.userList.get(0));
-        String postBody = objectMapper.writeValueAsString(rsEvent);
+        String postBody = "{\"eventName\":\"第四条事件\",\"keyword\":\"关键词4\",\"user\":{\"userName\":\"Bob\",\"age\":20,\"gender\":\"male\",\"email\":\"234@qq.com\",\"phone\":\"12345678902\"}}";
 
         mockMvc.perform(post("/rs").content(postBody).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -74,9 +74,7 @@ class RsListApplicationTests {
 
     @Test
     void should_add_rs_and_add_user_when_add_given_not_registered_user() throws Exception {
-        RsEvent rsEvent = new RsEvent("第四条事件", "关键词4",
-                new User("Tom", 19, "male", "123@qq.com", "12345678901"));
-        String postBody = objectMapper.writeValueAsString(rsEvent);
+        String postBody = "{\"eventName\":\"第四条事件\",\"keyword\":\"关键词4\",\"user\":{\"userName\":\"Tom\",\"age\":19,\"gender\":\"male\",\"email\":\"123@qq.com\",\"phone\":\"12345678901\"}}";
 
         mockMvc.perform(post("/rs").content(postBody).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
