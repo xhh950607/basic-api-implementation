@@ -1,9 +1,13 @@
 package com.thoughtworks.rslist.api;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thoughtworks.rslist.domain.User;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -26,6 +30,15 @@ class UserControllerTest {
                 .andExpect(jsonPath("$[0].user_email").value("234@qq.com"))
                 .andExpect(jsonPath("$[0].user_phone").value("12345678902"))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void should_add_user() throws Exception {
+        String postBody = "{\"userName\":\"Tom\",\"age\":19,\"gender\":\"male\",\"email\":\"123@qq.com\",\"phone\":\"12345678901\"}";
+
+        mockMvc.perform(post("/user").content(postBody).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        Assertions.assertEquals(2, UserController.userList.size());
     }
 
 }
