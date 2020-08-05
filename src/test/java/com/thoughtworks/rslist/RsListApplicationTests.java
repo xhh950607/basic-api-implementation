@@ -2,6 +2,7 @@ package com.thoughtworks.rslist;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thoughtworks.rslist.api.RsController;
 import com.thoughtworks.rslist.domain.RsEvent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,19 +25,16 @@ class RsListApplicationTests {
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
+    @BeforeEach
+    void setUp(){
+        RsController.resetRsList();
+    }
+
     @Test
     void should_get_one_rs_given_index() throws Exception {
         mockMvc.perform(get("/rs/1"))
-                .andExpect(jsonPath("$.eventName").value("第一条事件"))
-                .andExpect(jsonPath("$.keyword").value("关键词1"))
-                .andExpect(status().isOk());
-        mockMvc.perform(get("/rs/2"))
                 .andExpect(jsonPath("$.eventName").value("第二条事件"))
                 .andExpect(jsonPath("$.keyword").value("关键词2"))
-                .andExpect(status().isOk());
-        mockMvc.perform(get("/rs/3"))
-                .andExpect(jsonPath("$.eventName").value("第三条事件"))
-                .andExpect(jsonPath("$.keyword").value("关键词3"))
                 .andExpect(status().isOk());
     }
 
@@ -54,21 +52,7 @@ class RsListApplicationTests {
 
     @Test
     void should_get_rs_list_given_start_and_end() throws Exception {
-        mockMvc.perform(get("/rs/list?start=1&end=2"))
-                .andExpect(jsonPath("$[0].eventName").value("第一条事件"))
-                .andExpect(jsonPath("$[0].keyword").value("关键词1"))
-                .andExpect(jsonPath("$[1].eventName").value("第二条事件"))
-                .andExpect(jsonPath("$[1].keyword").value("关键词2"))
-                .andExpect(status().isOk());
         mockMvc.perform(get("/rs/list?start=1&end=3"))
-                .andExpect(jsonPath("$[0].eventName").value("第一条事件"))
-                .andExpect(jsonPath("$[0].keyword").value("关键词1"))
-                .andExpect(jsonPath("$[1].eventName").value("第二条事件"))
-                .andExpect(jsonPath("$[1].keyword").value("关键词2"))
-                .andExpect(jsonPath("$[2].eventName").value("第三条事件"))
-                .andExpect(jsonPath("$[2].keyword").value("关键词3"))
-                .andExpect(status().isOk());
-        mockMvc.perform(get("/rs/list?start=2&end=3"))
                 .andExpect(jsonPath("$[0].eventName").value("第二条事件"))
                 .andExpect(jsonPath("$[0].keyword").value("关键词2"))
                 .andExpect(jsonPath("$[1].eventName").value("第三条事件"))
@@ -81,7 +65,7 @@ class RsListApplicationTests {
         RsEvent rsEvent = new RsEvent("第四条事件", "关键词4");
         String postBody = objectMapper.writeValueAsString(rsEvent);
 
-        mockMvc.perform(post("/rs/event").content(postBody).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(post("/rs").content(postBody).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
         mockMvc.perform(get("/rs/list"))
                 .andExpect(jsonPath("$[0].eventName").value("第一条事件"))
@@ -100,15 +84,11 @@ class RsListApplicationTests {
         RsEvent rsEvent = new RsEvent("更新事件", "更新关键词");
         String postBody = objectMapper.writeValueAsString(rsEvent);
 
-        mockMvc.perform(put("/rs/event?index=1").content(postBody).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(put("/rs/0").content(postBody).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-        mockMvc.perform(get("/rs/list"))
-                .andExpect(jsonPath("$[0].eventName").value("更新事件"))
-                .andExpect(jsonPath("$[0].keyword").value("更新关键词"))
-                .andExpect(jsonPath("$[1].eventName").value("第二条事件"))
-                .andExpect(jsonPath("$[1].keyword").value("关键词2"))
-                .andExpect(jsonPath("$[2].eventName").value("第三条事件"))
-                .andExpect(jsonPath("$[2].keyword").value("关键词3"))
+        mockMvc.perform(get("/rs/0"))
+                .andExpect(jsonPath("$.eventName").value("更新事件"))
+                .andExpect(jsonPath("$.keyword").value("更新关键词"))
                 .andExpect(status().isOk());
     }
 
@@ -117,15 +97,11 @@ class RsListApplicationTests {
         RsEvent rsEvent = new RsEvent("更新事件", null);
         String postBody = objectMapper.writeValueAsString(rsEvent);
 
-        mockMvc.perform(put("/rs/event?index=1").content(postBody).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(put("/rs/0").content(postBody).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-        mockMvc.perform(get("/rs/list"))
-                .andExpect(jsonPath("$[0].eventName").value("更新事件"))
-                .andExpect(jsonPath("$[0].keyword").value("关键词1"))
-                .andExpect(jsonPath("$[1].eventName").value("第二条事件"))
-                .andExpect(jsonPath("$[1].keyword").value("关键词2"))
-                .andExpect(jsonPath("$[2].eventName").value("第三条事件"))
-                .andExpect(jsonPath("$[2].keyword").value("关键词3"))
+        mockMvc.perform(get("/rs/0"))
+                .andExpect(jsonPath("$.eventName").value("更新事件"))
+                .andExpect(jsonPath("$.keyword").value("关键词1"))
                 .andExpect(status().isOk());
     }
 
@@ -134,21 +110,17 @@ class RsListApplicationTests {
         RsEvent rsEvent = new RsEvent(null, "更新关键词");
         String postBody = objectMapper.writeValueAsString(rsEvent);
 
-        mockMvc.perform(put("/rs/event?index=1").content(postBody).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(put("/rs/0").content(postBody).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-        mockMvc.perform(get("/rs/list"))
-                .andExpect(jsonPath("$[0].eventName").value("第一条事件"))
-                .andExpect(jsonPath("$[0].keyword").value("更新关键词"))
-                .andExpect(jsonPath("$[1].eventName").value("第二条事件"))
-                .andExpect(jsonPath("$[1].keyword").value("关键词2"))
-                .andExpect(jsonPath("$[2].eventName").value("第三条事件"))
-                .andExpect(jsonPath("$[2].keyword").value("关键词3"))
+        mockMvc.perform(get("/rs/0"))
+                .andExpect(jsonPath("$.eventName").value("第一条事件"))
+                .andExpect(jsonPath("$.keyword").value("更新关键词"))
                 .andExpect(status().isOk());
     }
 
     @Test
     void should_success_when_delete_rs_by_index() throws Exception {
-        mockMvc.perform(delete("/rs/event?index=1"))
+        mockMvc.perform(delete("/rs/0"))
                 .andExpect(status().isOk());
         mockMvc.perform(get("/rs/list"))
                 .andExpect(jsonPath("$[0].eventName").value("第二条事件"))

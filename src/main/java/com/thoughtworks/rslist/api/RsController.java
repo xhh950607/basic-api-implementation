@@ -9,14 +9,22 @@ import java.util.stream.Stream;
 
 @RestController
 public class RsController {
-    private static List<RsEvent> rsList = Stream.of(
-            new RsEvent("第一条事件", "关键词1"),
-            new RsEvent("第二条事件", "关键词2"),
-            new RsEvent("第三条事件", "关键词3")).collect(Collectors.toList());
+    private static List<RsEvent> rsList;
+
+    {
+        resetRsList();
+    }
+
+    public static void resetRsList() {
+        rsList = Stream.of(
+                new RsEvent("第一条事件", "关键词1"),
+                new RsEvent("第二条事件", "关键词2"),
+                new RsEvent("第三条事件", "关键词3")).collect(Collectors.toList());
+    }
 
     @GetMapping("/rs/{index}")
     public RsEvent getOneRsByIndex(@PathVariable int index) {
-        return rsList.get(index - 1);
+        return rsList.get(index);
     }
 
     @GetMapping("/rs/list")
@@ -24,17 +32,17 @@ public class RsController {
                                           @RequestParam(required = false) Integer end) {
         if (start == null || end == null)
             return rsList;
-        return rsList.subList(start - 1, end);
+        return rsList.subList(start, end);
     }
 
-    @PostMapping("/rs/event")
+    @PostMapping("/rs")
     public void addRsEvent(@RequestBody RsEvent rsEvent) {
         rsList.add(rsEvent);
     }
 
-    @PutMapping("/rs/event")
-    public void updateRsEvent(@RequestParam int index, @RequestBody RsEvent newRsEvent) {
-        RsEvent oldRsEvent = rsList.get(index - 1);
+    @PutMapping("/rs/{index}")
+    public void updateRsEvent(@PathVariable int index, @RequestBody RsEvent newRsEvent) {
+        RsEvent oldRsEvent = rsList.get(index);
         String newEventName = newRsEvent.getEventName();
         String newKeyword = newRsEvent.getKeyword();
         if (newEventName != null)
@@ -43,9 +51,9 @@ public class RsController {
             oldRsEvent.setKeyword(newKeyword);
     }
 
-    @DeleteMapping("/rs/event")
-    public void deleteRsEvent(@RequestParam int index) {
-        rsList.remove(index - 1);
+    @DeleteMapping("/rs/{index}")
+    public void deleteRsEvent(@PathVariable int index) {
+        rsList.remove(index);
     }
 
 }
