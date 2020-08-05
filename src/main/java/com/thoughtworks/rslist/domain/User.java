@@ -14,6 +14,7 @@ public class User {
     @Size(max = 8)
     private String userName;
     private int age;
+    @NotNull
     private String gender;
     private String email;
     private String phone;
