@@ -19,6 +19,7 @@ public class User {
     private String gender;
     @Email
     private String email;
+    @Pattern(regexp = "1\\d{10}")
     private String phone;
 
     public User(String userName, int age, String gender, String email, String phone) {
