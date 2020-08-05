@@ -34,7 +34,7 @@ public class RsController {
 
     private static void resetUserList() {
         userList = Stream.of(
-                new User("Bob", 11, "male", "234@qq.com", "12345678902")
+                new User("Bob", 20, "male", "234@qq.com", "12345678902")
         ).collect(Collectors.toList());
     }
 
