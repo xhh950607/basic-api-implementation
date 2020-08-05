@@ -4,6 +4,8 @@ import com.thoughtworks.rslist.domain.CommonError;
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.exception.InvalidIndexException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -17,6 +19,8 @@ import java.util.stream.Stream;
 @RestController
 public class RsController {
     public static List<RsEvent> rsList;
+
+    Logger logger = LoggerFactory.getLogger(RsController.class);
 
     static {
         resetRsList();
@@ -94,6 +98,7 @@ public class RsController {
         else
             errMessage = "invalid param";
         CommonError err = new CommonError(errMessage);
+        logger.error(ex.getClass() + ":" + errMessage);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
     }
 
