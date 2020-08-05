@@ -30,7 +30,9 @@ public class RsController {
     }
 
     @GetMapping("/rs/{index}")
-    public ResponseEntity<RsEvent> getOneRsByIndex(@PathVariable int index) {
+    public ResponseEntity<RsEvent> getOneRsByIndex(@PathVariable int index) throws InvalidIndexException {
+        if(index<0 || index>=rsList.size())
+            throw new InvalidIndexException("invalid index");
         RsEvent rs = rsList.get(index);
         return ResponseEntity.status(HttpStatus.OK).body(rs);
     }
@@ -84,7 +86,7 @@ public class RsController {
     }
 
     @ExceptionHandler(InvalidIndexException.class)
-    public ResponseEntity<CommonError> handleInvalidException(InvalidIndexException ex) {
+    public ResponseEntity<CommonError> handleException(InvalidIndexException ex) {
         CommonError err = new CommonError(ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(err);
     }

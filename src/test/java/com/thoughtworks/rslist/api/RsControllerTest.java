@@ -42,6 +42,13 @@ class RsControllerTest {
     }
 
     @Test
+    void should_return_400_invalid_index_when_get_one_given_out_bound_index() throws Exception {
+        mockMvc.perform(get("/rs/3"))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("invalid index"));
+    }
+
+    @Test
     void should_get_rs_list() throws Exception {
         mockMvc.perform(get("/rs/list"))
                 .andExpect(jsonPath("$[0].eventName").value("第一条事件"))
