@@ -72,6 +72,18 @@ class RsListApplicationTests {
     }
 
     @Test
+    void should_add_rs_and_add_user_when_add_given_not_registered_user() throws Exception {
+        RsEvent rsEvent = new RsEvent("第四条事件", "关键词4",
+                new User("Tom", 13, "male", "123@qq.com", "12345678901"));
+        String postBody = objectMapper.writeValueAsString(rsEvent);
+
+        mockMvc.perform(post("/rs").content(postBody).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        Assertions.assertEquals(4, RsController.rsList.size());
+        Assertions.assertEquals(2, RsController.userList.size());
+    }
+
+    @Test
     void should_update_eventName_and_keyword_when_both_not_null() throws Exception {
         RsEvent rsEvent = new RsEvent("更新事件", "更新关键词", null);
         String postBody = objectMapper.writeValueAsString(rsEvent);

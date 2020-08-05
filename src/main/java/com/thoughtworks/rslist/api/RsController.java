@@ -13,7 +13,7 @@ public class RsController {
     public static List<RsEvent> rsList;
     public static List<User> userList;
 
-    {
+    static {
         resetData();
     }
 
@@ -51,7 +51,16 @@ public class RsController {
 
     @PostMapping("/rs")
     public void addRsEvent(@RequestBody RsEvent rsEvent) {
+        User user = rsEvent.getUser();
+        if (!isRegistered(user)) {
+            userList.add(user);
+        }
         rsList.add(rsEvent);
+    }
+
+    private boolean isRegistered(User user) {
+        return userList.stream()
+                .anyMatch(u -> u.getUserName().equals(user.getUserName()));
     }
 
     @PutMapping("/rs/{index}")
