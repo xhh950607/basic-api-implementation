@@ -47,11 +47,14 @@ public class RsController {
     }
 
     @GetMapping("/rs/list")
-    public List<RsEvent> getRsListBetween(@RequestParam(required = false) Integer start,
+    public ResponseEntity<List<RsEvent>> getRsListBetween(@RequestParam(required = false) Integer start,
                                           @RequestParam(required = false) Integer end) {
+        List<RsEvent> res;
         if (start == null || end == null)
-            return rsList;
-        return rsList.subList(start, end);
+            res = rsList;
+        else
+            res = rsList.subList(start, end);
+        return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
     @PostMapping("/rs")

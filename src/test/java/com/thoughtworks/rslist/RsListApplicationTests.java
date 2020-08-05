@@ -45,10 +45,13 @@ class RsListApplicationTests {
         mockMvc.perform(get("/rs/list"))
                 .andExpect(jsonPath("$[0].eventName").value("第一条事件"))
                 .andExpect(jsonPath("$[0].keyword").value("关键词1"))
+                .andExpect(jsonPath("$[0].user").doesNotHaveJsonPath())
                 .andExpect(jsonPath("$[1].eventName").value("第二条事件"))
                 .andExpect(jsonPath("$[1].keyword").value("关键词2"))
+                .andExpect(jsonPath("$[1].user").doesNotHaveJsonPath())
                 .andExpect(jsonPath("$[2].eventName").value("第三条事件"))
                 .andExpect(jsonPath("$[2].keyword").value("关键词3"))
+                .andExpect(jsonPath("$[2].user").doesNotHaveJsonPath())
                 .andExpect(status().isOk());
     }
 
@@ -57,8 +60,10 @@ class RsListApplicationTests {
         mockMvc.perform(get("/rs/list?start=1&end=3"))
                 .andExpect(jsonPath("$[0].eventName").value("第二条事件"))
                 .andExpect(jsonPath("$[0].keyword").value("关键词2"))
+                .andExpect(jsonPath("$[0].user").doesNotHaveJsonPath())
                 .andExpect(jsonPath("$[1].eventName").value("第三条事件"))
                 .andExpect(jsonPath("$[1].keyword").value("关键词3"))
+                .andExpect(jsonPath("$[1].user").doesNotHaveJsonPath())
                 .andExpect(status().isOk());
     }
 
