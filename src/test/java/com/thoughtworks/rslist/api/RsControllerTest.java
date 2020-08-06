@@ -2,7 +2,10 @@ package com.thoughtworks.rslist.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.domain.RsEvent;
-import org.junit.jupiter.api.Assertions;
+import com.thoughtworks.rslist.entity.RsEventEntitiy;
+import com.thoughtworks.rslist.entity.UserEntity;
+import com.thoughtworks.rslist.repository.RsEventRepository;
+import com.thoughtworks.rslist.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +14,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @AutoConfigureMockMvc
@@ -22,16 +28,46 @@ class RsControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private ObjectMapper objectMapper = new ObjectMapper();
+    @Autowired
+    private RsEventRepository rsRepository;
 
-//    @Test
-//    void should_get_one_rs_given_index() throws Exception {
-//        mockMvc.perform(get("/rs/1"))
-//                .andExpect(jsonPath("$.eventName").value("第二条事件"))
-//                .andExpect(jsonPath("$.keyword").value("关键词2"))
-//                .andExpect(jsonPath("$.user").doesNotHaveJsonPath())
-//                .andExpect(status().isOk());
-//    }
+    @Autowired
+    private UserRepository userRepository;
+
+    private ObjectMapper objectMapper = new ObjectMapper();
+    private UserEntity userEntity;
+    private List<RsEventEntitiy> rsEventEntitiys;
+
+    @BeforeEach
+    void setUp() {
+        userEntity = UserEntity.builder()
+                .name("Tom")
+                .age(20)
+                .gender("male")
+                .email("123@qq.com")
+                .phone("12345678901")
+                .build();
+        userEntity = userRepository.save(userEntity);
+
+        rsEventEntitiys = Arrays.stream(new int[]{1, 2, 3})
+                .mapToObj(i -> RsEventEntitiy.builder()
+                        .eventName("event name " + i)
+                        .keyword("keyword " + i)
+                        .userId(userEntity.getId())
+                        .build())
+                .map(e -> rsRepository.save(e))
+                .collect(Collectors.toList());
+    }
+
+    @Test
+    void should_get_one_rs_given_index() throws Exception {
+        RsEventEntitiy rsEventEntitiy = rsEventEntitiys.get(0);
+        mockMvc.perform(get("/rs/"+rsEventEntitiy.getId()))
+                .andExpect(jsonPath("$.eventName").value(rsEventEntitiy.getEventName()))
+                .andExpect(jsonPath("$.keyword").value(rsEventEntitiy.getKeyword()))
+                .andExpect(jsonPath("$.userId").value(rsEventEntitiy.getUserId()))
+                .andExpect(status().isOk());
+    }
 //
 //    @Test
 //    void should_return_400_invalid_index_when_get_one_given_out_bound_index() throws Exception {

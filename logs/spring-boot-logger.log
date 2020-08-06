@@ -2,3 +2,9 @@
 2020-08-05 23:45:10,627 ERROR com.thoughtworks.rslist.api.RsController [http-nio-8080-exec-4] class com.thoughtworks.rslist.exception.InvalidIndexException:invalid index
 2020-08-05 23:46:41,239 ERROR com.thoughtworks.rslist.api.UserController [http-nio-8080-exec-8] class org.springframework.web.bind.MethodArgumentNotValidException: invalid user
 2020-08-06 19:48:35,263 ERROR com.thoughtworks.rslist.api.UserController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid user
+2020-08-06 20:17:42,325 ERROR org.hibernate.engine.jdbc.spi.SqlExceptionHelper [Test worker] Incorrect string value: '\xE7\x83\xAD\xE6\x90\x9C...' for column 'event_name' at row 1
+2020-08-06 20:25:14,870 ERROR org.hibernate.engine.jdbc.spi.SqlExceptionHelper [Test worker] Incorrect string value: '\xE7\x83\xAD\xE6\x90\x9C...' for column 'event_name' at row 1
+2020-08-06 20:25:15,112 ERROR com.thoughtworks.rslist.api.UserController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid user
+2020-08-06 20:26:08,380 ERROR org.hibernate.engine.jdbc.spi.SqlExceptionHelper [Test worker] Incorrect string value: '\xE7\x83\xAD\xE6\x90\x9C...' for column 'event_name' at row 1
+2020-08-06 20:26:08,615 ERROR com.thoughtworks.rslist.api.UserController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid user
+2020-08-06 20:30:55,342 ERROR com.thoughtworks.rslist.api.UserController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid user
