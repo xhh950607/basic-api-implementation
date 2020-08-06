@@ -148,6 +148,19 @@ public class RsController {
         return ResponseEntity.created(null).build();
     }
 
+    @GetMapping("/rs/votes")
+    public ResponseEntity<List<Vote>> getVoteList(@RequestParam String startTime, @RequestParam String endTime) {
+        LocalDateTime start = LocalDateTime.parse(startTime);
+        LocalDateTime end = LocalDateTime.parse(endTime);
+        List<VoteEntity> voteEntities = voteRepository.findAllByVoteTimeBetween(start, end);
+        List<Vote> voteList = voteEntities.stream()
+                .map(entity ->
+                        new Vote(entity.getId(), entity.getVoteNum(),
+                                entity.getUserId(), entity.getVoteTime().toString()))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(voteList);
+    }
+
     @ExceptionHandler({MethodArgumentNotValidException.class})
     public ResponseEntity<CommonError> handleException(Exception ex) {
         CommonError err = new CommonError("invalid param");

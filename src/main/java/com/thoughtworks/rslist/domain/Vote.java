@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Vote {
 
+    private Integer id;
+
     @Min(0)
     private Integer voteNum;
 
@@ -21,4 +23,10 @@ public class Vote {
 
     @NotNull
     private String voteTime;
+
+    public Vote(@Min(0) Integer voteNum, @NotNull Integer userId, @NotNull String voteTime) {
+        this.voteNum = voteNum;
+        this.userId = userId;
+        this.voteTime = voteTime;
+    }
 }

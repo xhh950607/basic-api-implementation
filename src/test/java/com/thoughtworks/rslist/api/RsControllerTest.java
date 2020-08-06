@@ -276,4 +276,28 @@ class RsControllerTest {
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    void should_get_vote_records_given_time_limit() throws Exception {
+        RsEventEntitiy rsEventEntitiy = rsEventEntitiys.get(0);
+        VoteEntity v1 = voteRepository.save(VoteEntity.builder()
+                .voteNum(2)
+                .voteTime(LocalDateTime.of(2020, 10, 10, 10, 10))
+                .rsEventId(rsEventEntitiy.getId())
+                .userId(userEntity.getId())
+                .build());
+        VoteEntity v2 = voteRepository.save(VoteEntity.builder()
+                .voteNum(3)
+                .voteTime(LocalDateTime.of(2020, 11, 11, 11, 11))
+                .rsEventId(rsEventEntitiy.getId())
+                .userId(userEntity.getId())
+                .build());
+
+        mockMvc.perform(get("/rs/votes?startTime=" + v1.getVoteTime().toString() + "&endTime=" + v2.getVoteTime().toString()))
+                .andExpect(jsonPath("$[0].voteNum").value(v1.getVoteNum()))
+                .andExpect(jsonPath("$[0].id").value(v1.getId()))
+                .andExpect(jsonPath("$[1].voteNum").value(v2.getVoteNum()))
+                .andExpect(jsonPath("$[1].id").value(v2.getId()))
+                .andExpect(status().isOk());
+    }
 }
