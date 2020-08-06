@@ -6,7 +6,10 @@ import com.thoughtworks.rslist.entity.RsEventEntitiy;
 import com.thoughtworks.rslist.entity.UserEntity;
 import com.thoughtworks.rslist.repository.RsEventRepository;
 import com.thoughtworks.rslist.repository.UserRepository;
+
 import static org.junit.jupiter.api.Assertions.*;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +63,12 @@ class RsControllerTest {
                 .collect(Collectors.toList());
     }
 
+    @AfterEach
+    void clearUp() {
+        userRepository.deleteAll();
+        rsRepository.deleteAll();
+    }
+
     @Test
     void should_get_one_rs_given_index() throws Exception {
         RsEventEntitiy rsEventEntitiy = rsEventEntitiys.get(0);
@@ -99,7 +108,10 @@ class RsControllerTest {
 
         mockMvc.perform(post("/rs").content(postBody).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
-        RsEventEntitiy rsEventEntitiy = rsRepository.findById(4).get();
+
+        List<RsEventEntitiy> entitiys = rsRepository.findAll();
+        assertEquals(4, entitiys.size());
+        RsEventEntitiy rsEventEntitiy = entitiys.get(entitiys.size() - 1);
         assertEquals(rsEvent.getEventName(), rsEventEntitiy.getEventName());
         assertEquals(rsEvent.getKeyword(), rsEventEntitiy.getKeyword());
         assertEquals(rsEvent.getUserId(), rsEventEntitiy.getUserId());
@@ -107,11 +119,20 @@ class RsControllerTest {
 
     @Test
     void should_return_400_when_add_given_not_registered_user() throws Exception {
-        RsEvent rsEvent = new RsEvent("trend 4", "keyword 4", userEntity.getId());
+        RsEvent rsEvent = new RsEvent("trend 4", "keyword 4", 100);
         String postBody = objectMapper.writeValueAsString(rsEvent);
 
         mockMvc.perform(post("/rs").content(postBody).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void should_delete_related_rs_event_when_delete_user_given_userId() throws Exception {
+        mockMvc.perform(delete("/user/" + userEntity.getId()))
+                .andExpect(status().isOk());
+
+        assertEquals(0, userRepository.findAll().size());
+        assertEquals(0, rsRepository.findAll().size());
     }
 //
 //    @Test
