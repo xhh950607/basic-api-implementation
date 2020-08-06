@@ -1,6 +1,8 @@
 package com.thoughtworks.rslist.domain;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,11 +10,26 @@ import javax.validation.constraints.*;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class User {
 
     @NotNull
     @Size(max = 8)
     private String userName;
+
+    @Max(100)
+    @Min(18)
+    private int age;
+
+    @NotNull
+    private String gender;
+
+    @Email
+    private String email;
+
+    @Pattern(regexp = "1\\d{10}")
+    private String phone;
 
     @JsonProperty("user_name")
     public String getUserName() {
@@ -61,27 +78,6 @@ public class User {
 
     @JsonProperty("phone")
     public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    @Max(100)
-    @Min(18)
-    private int age;
-
-    @NotNull
-    private String gender;
-
-    @Email
-    private String email;
-
-    @Pattern(regexp = "1\\d{10}")
-    private String phone;
-
-    public User(String userName, int age, String gender, String email, String phone) {
-        this.userName = userName;
-        this.age = age;
-        this.gender = gender;
-        this.email = email;
         this.phone = phone;
     }
 }

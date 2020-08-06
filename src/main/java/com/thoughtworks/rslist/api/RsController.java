@@ -4,8 +4,10 @@ import com.thoughtworks.rslist.domain.CommonError;
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.exception.InvalidIndexException;
+import com.thoughtworks.rslist.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -19,6 +21,9 @@ import java.util.stream.Stream;
 @RestController
 public class RsController {
     public static List<RsEvent> rsList;
+
+    @Autowired
+    UserRepository userRepository;
 
     Logger logger = LoggerFactory.getLogger(RsController.class);
 
@@ -55,21 +60,20 @@ public class RsController {
         return ResponseEntity.status(HttpStatus.OK).body(res);
     }
 
-    @PostMapping("/rs")
-    public ResponseEntity<Void> addRsEvent(@RequestBody @Valid RsEvent rsEvent) {
-        User user = rsEvent.getUser();
-        if (!isRegistered(user)) {
-            UserController.userList.add(user);
-        }
-        rsList.add(rsEvent);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .header("index", rsList.indexOf(rsEvent) + "")
-                .body(null);
-    }
+//    @PostMapping("/rs")
+//    public ResponseEntity<Void> addRsEvent(@RequestBody @Valid RsEvent rsEvent) {
+//        User user = rsEvent.getUser();
+//        if (!isRegistered(user)) {
+//            UserController.userList.add(user);
+//        }
+//        rsList.add(rsEvent);
+//        return ResponseEntity.status(HttpStatus.CREATED)
+//                .header("index", rsList.indexOf(rsEvent) + "")
+//                .body(null);
+//    }
 
-    private boolean isRegistered(User user) {
-        return UserController.userList.stream()
-                .anyMatch(u -> u.getUserName().equals(user.getUserName()));
+    private boolean isRegistered(Integer userId) {
+        return userRepository.findById(userId).isPresent();
     }
 
     @PutMapping("/rs/{index}")
