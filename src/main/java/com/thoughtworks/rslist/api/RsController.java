@@ -57,17 +57,19 @@ public class RsController {
         }
     }
 
-//    @GetMapping("/rs/list")
-//    public ResponseEntity<List<RsEvent>> getRsListBetween() throws InvalidIndexException {
-//        List<RsEvent> res;
-//        if (start == null || end == null)
-//            res = rsList;
-//        else if (start < 0 || end > rsList.size())
-//            throw new InvalidIndexException("invalid request param");
-//        else
-//            res = rsList.subList(start, end);
-//        return ResponseEntity.status(HttpStatus.OK).body(res);
-//    }
+    @GetMapping("/rs/list")
+    public ResponseEntity<List<RsEvent>> getRsList() {
+        List<RsEventEntitiy> rsEventEntitiys = rsEventRepository.findAll();
+        List<RsEvent> rsEvents = rsEventEntitiys.stream()
+                .map(entity -> RsEvent.builder()
+                        .eventName(entity.getEventName())
+                        .keyword(entity.getKeyword())
+                        .id(entity.getId())
+                        .voteNum(entity.getVoteNum())
+                        .build()
+                ).collect(Collectors.toList());
+        return ResponseEntity.ok(rsEvents);
+    }
 
     @PostMapping("/rs")
     public ResponseEntity addRsEvent(@RequestBody @Valid RsEvent rsEvent) {

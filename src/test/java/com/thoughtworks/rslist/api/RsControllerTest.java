@@ -98,21 +98,24 @@ class RsControllerTest {
                 .andExpect(jsonPath("$.error").value("invalid id"));
     }
 
-    //    @Test
-//    void should_get_rs_list() throws Exception {
-//        mockMvc.perform(get("/rs/list"))
-//                .andExpect(jsonPath("$[0].eventName").value(rsEventEntitiys.get(0).getEventName()))
-//                .andExpect(jsonPath("$[0].keyword").value(rsEventEntitiys.get(0).getKeyword()))
-//                .andExpect(jsonPath("$[0].userId").value(rsEventEntitiys.get(0).getUserId()))
-//                .andExpect(jsonPath("$[1].eventName").value(rsEventEntitiys.get(1).getEventName()))
-//                .andExpect(jsonPath("$[1].keyword").value(rsEventEntitiys.get(1).getKeyword()))
-//                .andExpect(jsonPath("$[1].userId").value(rsEventEntitiys.get(1).getUserId()))
-//                .andExpect(jsonPath("$[2].eventName").value(rsEventEntitiys.get(2).getEventName()))
-//                .andExpect(jsonPath("$[2].keyword").value(rsEventEntitiys.get(2).getKeyword()))
-//                .andExpect(jsonPath("$[2].userId").value(rsEventEntitiys.get(2).getUserId()))
-//                .andExpect(status().isOk());
-//    }
-//
+    @Test
+    void should_get_rs_list() throws Exception {
+        mockMvc.perform(get("/rs/list"))
+                .andExpect(jsonPath("$[0].eventName").value(rsEventEntitiys.get(0).getEventName()))
+                .andExpect(jsonPath("$[0].keyword").value(rsEventEntitiys.get(0).getKeyword()))
+                .andExpect(jsonPath("$[0].id").value(rsEventEntitiys.get(0).getId()))
+                .andExpect(jsonPath("$[0].voteNum").value(rsEventEntitiys.get(0).getVoteNum()))
+                .andExpect(jsonPath("$[1].eventName").value(rsEventEntitiys.get(1).getEventName()))
+                .andExpect(jsonPath("$[1].keyword").value(rsEventEntitiys.get(1).getKeyword()))
+                .andExpect(jsonPath("$[1].id").value(rsEventEntitiys.get(1).getId()))
+                .andExpect(jsonPath("$[1].voteNum").value(rsEventEntitiys.get(1).getVoteNum()))
+                .andExpect(jsonPath("$[2].eventName").value(rsEventEntitiys.get(2).getEventName()))
+                .andExpect(jsonPath("$[2].keyword").value(rsEventEntitiys.get(2).getKeyword()))
+                .andExpect(jsonPath("$[2].id").value(rsEventEntitiys.get(2).getId()))
+                .andExpect(jsonPath("$[2].voteNum").value(rsEventEntitiys.get(2).getVoteNum()))
+                .andExpect(status().isOk());
+    }
+
     @Test
     void should_only_add_rs_when_add_given_registered_user() throws Exception {
         RsEvent rsEvent = new RsEvent("trend 4", "keyword 4", userEntity.getId());
