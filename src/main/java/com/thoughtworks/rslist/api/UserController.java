@@ -6,9 +6,7 @@ import com.thoughtworks.rslist.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
@@ -31,6 +29,19 @@ public class UserController {
                 .build();
         userRepository.save(userEntity);
         return ResponseEntity.status(HttpStatus.CREATED).body(null);
+    }
+
+    @GetMapping("/user/{index}")
+    public ResponseEntity<User> getOne(@PathVariable Integer index) {
+        UserEntity userEntity = userRepository.getUserById(index);
+        User user = User.builder()
+                .userName(userEntity.getName())
+                .age(userEntity.getAge())
+                .gender(userEntity.getGender())
+                .email(userEntity.getEmail())
+                .phone(userEntity.getPhone())
+                .build();
+        return ResponseEntity.ok(user);
     }
 
 }

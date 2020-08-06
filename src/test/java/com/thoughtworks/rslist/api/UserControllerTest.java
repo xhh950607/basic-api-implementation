@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.domain.User;
 import com.thoughtworks.rslist.entity.UserEntity;
 import com.thoughtworks.rslist.repository.UserRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -14,8 +15,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -28,6 +29,11 @@ class UserControllerTest {
     UserRepository userRepository;
 
     private ObjectMapper objectMapper = new ObjectMapper();
+
+    @AfterEach
+    void clear(){
+        userRepository.deleteAll();
+    }
 
     @Test
     void should_save_user_in_db_when_register_user() throws Exception {
@@ -44,5 +50,25 @@ class UserControllerTest {
         assertEquals(user.getGender(), actualUser.getGender());
         assertEquals(user.getEmail(), actualUser.getEmail());
         assertEquals(user.getPhone(), actualUser.getPhone());
+    }
+
+    @Test
+    void should_get_one_given_index() throws Exception {
+        UserEntity userEntity = UserEntity.builder()
+                .name("Tom")
+                .age(20)
+                .gender("male")
+                .email("123@qq.com")
+                .phone("12345678901")
+                .build();
+        userEntity = userRepository.save(userEntity);
+
+        mockMvc.perform(get("/user/" + userEntity.getId()))
+                .andExpect(jsonPath("userName").value(userEntity.getName()))
+                .andExpect(jsonPath("age").value(userEntity.getAge()))
+                .andExpect(jsonPath("gender").value(userEntity.getGender()))
+                .andExpect(jsonPath("email").value(userEntity.getEmail()))
+                .andExpect(jsonPath("phone").value(userEntity.getPhone()))
+                .andExpect(status().isOk());
     }
 }
