@@ -126,6 +126,9 @@ public class RsController {
             return ResponseEntity.badRequest().build();
         UserEntity userEntity = userEntityOptional.get();
 
+        if (vote.getVoteNum() > userEntity.getVoteNum())
+            return ResponseEntity.badRequest().build();
+
         VoteEntity voteEntity = VoteEntity.builder()
                 .voteNum(vote.getVoteNum())
                 .voteTime(LocalDateTime.parse(vote.getVoteTime()))

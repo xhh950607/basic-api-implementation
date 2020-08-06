@@ -263,4 +263,15 @@ class RsControllerTest {
         assertEquals(oldUserVoteNum - 5, userRepository.findById(userEntity.getId()).get().getVoteNum());
         assertEquals(oldRsEventVoteNum + 5, rsRepository.findById(rsEventEntitiy.getId()).get().getVoteNum());
     }
+
+    @Test
+    void should_return_400_when_vote_too_much() throws Exception {
+        Vote vote = new Vote(15, userEntity.getId(), LocalDateTime.now().toString());
+        String postStr = objectMapper.writeValueAsString(vote);
+
+        mockMvc.perform(post("/rs/vote/" + rsEventEntitiys.get(0).getId())
+                .content(postStr)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
 }
