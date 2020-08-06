@@ -106,12 +106,12 @@ public class RsController {
             return ResponseEntity.badRequest().build();
         }
     }
-//
-//    @DeleteMapping("/rs/{index}")
-//    public ResponseEntity<Void> deleteRsEvent(@PathVariable int index) {
-//        rsList.remove(index);
-//        return ResponseEntity.status(HttpStatus.OK).body(null);
-//    }
+
+    @DeleteMapping("/rs/{id}")
+    public ResponseEntity<Void> deleteRsEvent(@PathVariable Integer id) {
+        rsEventRepository.deleteById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
 
     @Transactional
     @PostMapping("/rs/vote/{rsEventId}")

@@ -227,18 +227,16 @@ class RsControllerTest {
         mockMvc.perform(patch("/rs/" + entitiy.getId()).content(postBody).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
-//
-//    @Test
-//    void should_success_when_delete_rs_by_index() throws Exception {
-//        mockMvc.perform(delete("/rs/0"))
-//                .andExpect(status().isOk());
-//        mockMvc.perform(get("/rs/list"))
-//                .andExpect(jsonPath("$[0].eventName").value("第二条事件"))
-//                .andExpect(jsonPath("$[0].keyword").value("关键词2"))
-//                .andExpect(jsonPath("$[1].eventName").value("第三条事件"))
-//                .andExpect(jsonPath("$[1].keyword").value("关键词3"))
-//                .andExpect(status().isOk());
-//    }
+
+    @Test
+    void should_related_vote_when__rs_by_id() throws Exception {
+        RsEventEntitiy rsEventEntitiy = rsEventEntitiys.get(0);
+
+        mockMvc.perform(delete("/rs/" + rsEventEntitiy.getId()))
+                .andExpect(status().isOk());
+
+        assertEquals(false, rsRepository.findById(rsEventEntitiy.getId()).isPresent());
+    }
 
     @Test
     void should_vote_success() throws Exception {

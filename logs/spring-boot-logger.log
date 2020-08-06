@@ -3850,3 +3850,6 @@ Caused by: org.hibernate.MappingException: Repeated column in mapping for entity
 2020-08-06 23:08:35,565 ERROR com.thoughtworks.rslist.api.RsController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid param
 2020-08-06 23:08:35,781 ERROR com.thoughtworks.rslist.api.RsController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid param
 2020-08-06 23:08:35,839 ERROR com.thoughtworks.rslist.api.UserController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid user
+2020-08-06 23:17:03,294 ERROR com.thoughtworks.rslist.api.RsController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid param
+2020-08-06 23:17:03,323 ERROR com.thoughtworks.rslist.api.RsController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid param
+2020-08-06 23:17:03,569 ERROR com.thoughtworks.rslist.api.RsController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid param
