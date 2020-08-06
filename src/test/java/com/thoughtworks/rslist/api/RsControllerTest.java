@@ -68,13 +68,13 @@ class RsControllerTest {
                 .andExpect(jsonPath("$.userId").value(rsEventEntitiy.getUserId()))
                 .andExpect(status().isOk());
     }
-//
-//    @Test
-//    void should_return_400_invalid_index_when_get_one_given_out_bound_index() throws Exception {
-//        mockMvc.perform(get("/rs/3"))
-//                .andExpect(status().isBadRequest())
-//                .andExpect(jsonPath("$.error").value("invalid index"));
-//    }
+
+    @Test
+    void should_return_400_invalid_id_when_get_one_given_invalid_id() throws Exception {
+        mockMvc.perform(get("/rs/"+100))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("invalid id"));
+    }
 //
 //    @Test
 //    void should_get_rs_list() throws Exception {

@@ -8,3 +8,4 @@
 2020-08-06 20:26:08,380 ERROR org.hibernate.engine.jdbc.spi.SqlExceptionHelper [Test worker] Incorrect string value: '\xE7\x83\xAD\xE6\x90\x9C...' for column 'event_name' at row 1
 2020-08-06 20:26:08,615 ERROR com.thoughtworks.rslist.api.UserController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid user
 2020-08-06 20:30:55,342 ERROR com.thoughtworks.rslist.api.UserController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid user
+2020-08-06 20:34:51,289 ERROR com.thoughtworks.rslist.api.UserController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid user

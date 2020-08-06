@@ -32,7 +32,7 @@ public class RsController {
     Logger logger = LoggerFactory.getLogger(RsController.class);
 
     @GetMapping("/rs/{id}")
-    public ResponseEntity<RsEvent> getOneRsById(@PathVariable Integer id) throws InvalidIndexException {
+    public ResponseEntity getOneRsById(@PathVariable Integer id) throws InvalidIndexException {
         Optional<RsEventEntitiy> entitiyOptional = rsEventRepository.findById(id);
         if (entitiyOptional.isPresent()) {
             RsEventEntitiy entitiy = entitiyOptional.get();
@@ -43,7 +43,7 @@ public class RsController {
                     .build();
             return ResponseEntity.ok(rsEvent);
         } else {
-            return ResponseEntity.ok(null);
+            return ResponseEntity.badRequest().body(new CommonError("invalid id"));
         }
     }
 
