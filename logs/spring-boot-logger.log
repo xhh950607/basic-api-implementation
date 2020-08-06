@@ -3853,3 +3853,11 @@ Caused by: org.hibernate.MappingException: Repeated column in mapping for entity
 2020-08-06 23:17:03,294 ERROR com.thoughtworks.rslist.api.RsController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid param
 2020-08-06 23:17:03,323 ERROR com.thoughtworks.rslist.api.RsController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid param
 2020-08-06 23:17:03,569 ERROR com.thoughtworks.rslist.api.RsController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid param
+2020-08-06 23:21:39,110 ERROR com.thoughtworks.rslist.api.RsController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid param
+2020-08-06 23:21:39,143 ERROR com.thoughtworks.rslist.api.RsController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid param
+2020-08-06 23:21:39,386 ERROR com.thoughtworks.rslist.api.RsController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid param
+2020-08-06 23:21:39,438 ERROR com.thoughtworks.rslist.api.UserController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid user
+2020-08-06 23:22:11,229 ERROR com.thoughtworks.rslist.api.RsController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid param
+2020-08-06 23:22:11,260 ERROR com.thoughtworks.rslist.api.RsController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid param
+2020-08-06 23:22:11,527 ERROR com.thoughtworks.rslist.api.RsController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid param
+2020-08-06 23:22:11,584 ERROR com.thoughtworks.rslist.api.UserController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid user

@@ -48,7 +48,8 @@ public class RsController {
             RsEvent rsEvent = RsEvent.builder()
                     .eventName(entitiy.getEventName())
                     .keyword(entitiy.getKeyword())
-                    .userId(entitiy.getUserId())
+                    .id(entitiy.getId())
+                    .voteNum(entitiy.getVoteNum())
                     .build();
             return ResponseEntity.ok(rsEvent);
         } else {

@@ -86,7 +86,8 @@ class RsControllerTest {
         mockMvc.perform(get("/rs/" + rsEventEntitiy.getId()))
                 .andExpect(jsonPath("$.eventName").value(rsEventEntitiy.getEventName()))
                 .andExpect(jsonPath("$.keyword").value(rsEventEntitiy.getKeyword()))
-                .andExpect(jsonPath("$.userId").value(rsEventEntitiy.getUserId()))
+                .andExpect(jsonPath("$.id").value(rsEventEntitiy.getId()))
+                .andExpect(jsonPath("$.voteNum").value(rsEventEntitiy.getVoteNum()))
                 .andExpect(status().isOk());
     }
 

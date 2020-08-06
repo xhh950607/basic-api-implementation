@@ -15,6 +15,10 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Builder
 public class RsEvent {
+
+    private Integer id;
+    private Integer voteNum;
+
     @NotNull
     private String eventName;
 
@@ -23,4 +27,10 @@ public class RsEvent {
 
     @NotNull
     private Integer userId;
+
+    public RsEvent(@NotNull String eventName, @NotNull String keyword, @NotNull Integer userId) {
+        this.eventName = eventName;
+        this.keyword = keyword;
+        this.userId = userId;
+    }
 }
