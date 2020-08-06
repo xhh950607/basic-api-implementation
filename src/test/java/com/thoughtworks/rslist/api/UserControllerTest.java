@@ -31,7 +31,7 @@ class UserControllerTest {
     private ObjectMapper objectMapper = new ObjectMapper();
 
     @AfterEach
-    void clear(){
+    void clear() {
         userRepository.deleteAll();
     }
 
@@ -53,15 +53,8 @@ class UserControllerTest {
     }
 
     @Test
-    void should_get_one_given_index() throws Exception {
-        UserEntity userEntity = UserEntity.builder()
-                .name("Tom")
-                .age(20)
-                .gender("male")
-                .email("123@qq.com")
-                .phone("12345678901")
-                .build();
-        userEntity = userRepository.save(userEntity);
+    void should_get_one_given_id() throws Exception {
+        UserEntity userEntity = saveOneUser();
 
         mockMvc.perform(get("/user/" + userEntity.getId()))
                 .andExpect(jsonPath("userName").value(userEntity.getName()))
@@ -70,5 +63,26 @@ class UserControllerTest {
                 .andExpect(jsonPath("email").value(userEntity.getEmail()))
                 .andExpect(jsonPath("phone").value(userEntity.getPhone()))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void should_delete_user_given_id() throws Exception {
+        UserEntity userEntity = saveOneUser();
+
+        mockMvc.perform(delete("/user/" + userEntity.getId()))
+                .andExpect(status().isOk());
+
+        assertEquals(false, userRepository.findById(userEntity.getId()).isPresent());
+    }
+
+    private UserEntity saveOneUser() {
+        UserEntity userEntity = UserEntity.builder()
+                .name("Tom")
+                .age(20)
+                .gender("male")
+                .email("123@qq.com")
+                .phone("12345678901")
+                .build();
+        return userRepository.save(userEntity);
     }
 }

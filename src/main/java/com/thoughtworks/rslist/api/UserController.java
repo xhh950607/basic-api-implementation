@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 public class UserController {
 
@@ -31,17 +33,27 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 
-    @GetMapping("/user/{index}")
-    public ResponseEntity<User> getOne(@PathVariable Integer index) {
-        UserEntity userEntity = userRepository.getUserById(index);
-        User user = User.builder()
-                .userName(userEntity.getName())
-                .age(userEntity.getAge())
-                .gender(userEntity.getGender())
-                .email(userEntity.getEmail())
-                .phone(userEntity.getPhone())
-                .build();
-        return ResponseEntity.ok(user);
+    @GetMapping("/user/{id}")
+    public ResponseEntity<User> getOne(@PathVariable Integer id) {
+        Optional<UserEntity> optionalUserEntity = userRepository.findById(id);
+        if (optionalUserEntity.isPresent()) {
+            UserEntity userEntity = optionalUserEntity.get();
+            User user = User.builder()
+                    .userName(userEntity.getName())
+                    .age(userEntity.getAge())
+                    .gender(userEntity.getGender())
+                    .email(userEntity.getEmail())
+                    .phone(userEntity.getPhone())
+                    .build();
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
+    @DeleteMapping("/user/{id}")
+    public ResponseEntity deleteUser(@PathVariable Integer id) {
+        userRepository.deleteById(id);
+        return ResponseEntity.ok().build();
+    }
 }
