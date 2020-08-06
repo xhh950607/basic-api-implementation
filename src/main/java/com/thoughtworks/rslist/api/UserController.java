@@ -47,6 +47,7 @@ public class UserController {
                 .gender(user.getGender())
                 .email(user.getEmail())
                 .phone(user.getPhone())
+                .voteNum(10)
                 .build();
         userRepository.save(userEntity);
         return ResponseEntity.status(HttpStatus.CREATED).body(null);

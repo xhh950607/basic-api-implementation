@@ -3,20 +3,26 @@ package com.thoughtworks.rslist.api;
 import com.thoughtworks.rslist.domain.CommonError;
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.domain.User;
+import com.thoughtworks.rslist.domain.Vote;
 import com.thoughtworks.rslist.entity.RsEventEntitiy;
+import com.thoughtworks.rslist.entity.UserEntity;
+import com.thoughtworks.rslist.entity.VoteEntity;
 import com.thoughtworks.rslist.exception.InvalidIndexException;
 import com.thoughtworks.rslist.repository.RsEventRepository;
 import com.thoughtworks.rslist.repository.UserRepository;
+import com.thoughtworks.rslist.repository.VoteRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,6 +35,8 @@ public class RsController {
     UserRepository userRepository;
     @Autowired
     RsEventRepository rsEventRepository;
+    @Autowired
+    VoteRepository voteRepository;
 
     Logger logger = LoggerFactory.getLogger(RsController.class);
 
@@ -67,6 +75,7 @@ public class RsController {
                     .eventName(rsEvent.getEventName())
                     .keyword(rsEvent.getKeyword())
                     .userId(rsEvent.getUserId())
+                    .voteNum(0)
                     .build();
             rsEventRepository.save(entitiy);
             return ResponseEntity.created(null).build();
@@ -103,6 +112,35 @@ public class RsController {
 //        rsList.remove(index);
 //        return ResponseEntity.status(HttpStatus.OK).body(null);
 //    }
+
+    @Transactional
+    @PostMapping("/rs/vote/{rsEventId}")
+    public ResponseEntity vote(@PathVariable Integer rsEventId, @RequestBody @Valid Vote vote) {
+        Optional<RsEventEntitiy> rsEventEntitiyOptional = rsEventRepository.findById(rsEventId);
+        if (!rsEventEntitiyOptional.isPresent())
+            return ResponseEntity.badRequest().build();
+        RsEventEntitiy rsEventEntitiy = rsEventEntitiyOptional.get();
+
+        Optional<UserEntity> userEntityOptional = userRepository.findById(vote.getUserId());
+        if (!userEntityOptional.isPresent())
+            return ResponseEntity.badRequest().build();
+        UserEntity userEntity = userEntityOptional.get();
+
+        VoteEntity voteEntity = VoteEntity.builder()
+                .voteNum(vote.getVoteNum())
+                .voteTime(LocalDateTime.parse(vote.getVoteTime()))
+                .rsEventId(rsEventEntitiy.getId())
+                .userId(userEntity.getId())
+                .build();
+
+        userEntity.setVoteNum(userEntity.getVoteNum() - vote.getVoteNum());
+        rsEventEntitiy.setVoteNum(rsEventEntitiy.getVoteNum() + vote.getVoteNum());
+        voteRepository.save(voteEntity);
+        userRepository.save(userEntity);
+        rsEventRepository.save(rsEventEntitiy);
+
+        return ResponseEntity.created(null).build();
+    }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
     public ResponseEntity<CommonError> handleException(Exception ex) {

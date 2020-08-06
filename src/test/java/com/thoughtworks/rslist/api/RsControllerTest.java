@@ -3,13 +3,16 @@ package com.thoughtworks.rslist.api;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.domain.RsEvent;
+import com.thoughtworks.rslist.domain.Vote;
 import com.thoughtworks.rslist.entity.RsEventEntitiy;
 import com.thoughtworks.rslist.entity.UserEntity;
+import com.thoughtworks.rslist.entity.VoteEntity;
 import com.thoughtworks.rslist.repository.RsEventRepository;
 import com.thoughtworks.rslist.repository.UserRepository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import com.thoughtworks.rslist.repository.VoteRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,6 +43,9 @@ class RsControllerTest {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private VoteRepository voteRepository;
+
     private ObjectMapper objectMapper = new ObjectMapper();
     private UserEntity userEntity;
     private List<RsEventEntitiy> rsEventEntitiys;
@@ -51,6 +58,7 @@ class RsControllerTest {
                 .gender("male")
                 .email("123@qq.com")
                 .phone("12345678901")
+                .voteNum(10)
                 .build();
         userEntity = userRepository.save(userEntity);
 
@@ -59,6 +67,7 @@ class RsControllerTest {
                         .eventName("event name " + i)
                         .keyword("keyword " + i)
                         .userId(userEntity.getId())
+                        .voteNum(0)
                         .build())
                 .map(e -> rsRepository.save(e))
                 .collect(Collectors.toList());
@@ -66,6 +75,7 @@ class RsControllerTest {
 
     @AfterEach
     void clearUp() {
+        voteRepository.deleteAll();
         userRepository.deleteAll();
         rsRepository.deleteAll();
     }
@@ -229,4 +239,28 @@ class RsControllerTest {
 //                .andExpect(jsonPath("$[1].keyword").value("关键词3"))
 //                .andExpect(status().isOk());
 //    }
+
+    @Test
+    void should_vote_success() throws Exception {
+        LocalDateTime time = LocalDateTime.now();
+        Vote vote = new Vote(5, userEntity.getId(), time.toString());
+        String postStr = objectMapper.writeValueAsString(vote);
+
+        RsEventEntitiy rsEventEntitiy = rsEventEntitiys.get(0);
+        Integer oldUserVoteNum = userEntity.getVoteNum();
+        Integer oldRsEventVoteNum = rsEventEntitiy.getVoteNum();
+
+        mockMvc.perform(post("/rs/vote/" + rsEventEntitiy.getId())
+                .content(postStr)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+
+        VoteEntity voteEntity = voteRepository.findAll().get(0);
+        assertEquals(5, voteEntity.getVoteNum());
+        assertEquals(userEntity.getId(), voteEntity.getUser().getId());
+        assertEquals(rsEventEntitiy.getId(), voteEntity.getRsEvent().getId());
+
+        assertEquals(oldUserVoteNum - 5, userRepository.findById(userEntity.getId()).get().getVoteNum());
+        assertEquals(oldRsEventVoteNum + 5, rsRepository.findById(rsEventEntitiy.getId()).get().getVoteNum());
+    }
 }
