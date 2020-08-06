@@ -3835,3 +3835,5 @@ Caused by: org.hibernate.MappingException: Repeated column in mapping for entity
 	at org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean.createNativeEntityManagerFactory(LocalContainerEntityManagerFactoryBean.java:365)
 	at org.springframework.orm.jpa.AbstractEntityManagerFactoryBean.buildNativeEntityManagerFactory(AbstractEntityManagerFactoryBean.java:391)
 	... 107 common frames omitted
+2020-08-06 21:21:50,371 ERROR com.thoughtworks.rslist.api.UserController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid user
+2020-08-06 21:41:29,206 ERROR com.thoughtworks.rslist.api.UserController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid user

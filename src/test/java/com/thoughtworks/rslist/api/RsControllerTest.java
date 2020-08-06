@@ -1,5 +1,6 @@
 package com.thoughtworks.rslist.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thoughtworks.rslist.domain.RsEvent;
 import com.thoughtworks.rslist.entity.RsEventEntitiy;
@@ -171,45 +172,58 @@ class RsControllerTest {
 //        mockMvc.perform(post("/rs").content(postBody).contentType(MediaType.APPLICATION_JSON))
 //                .andExpect(status().isBadRequest());
 //    }_
-//
-//    @Test
-//    void should_update_eventName_and_keyword_when_both_not_null() throws Exception {
-//        RsEvent rsEvent = new RsEvent("更新事件", "更新关键词", null);
-//        String postBody = objectMapper.writeValueAsString(rsEvent);
-//
-//        mockMvc.perform(put("/rs/0").content(postBody).contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk());
-//        mockMvc.perform(get("/rs/0"))
-//                .andExpect(jsonPath("$.eventName").value("更新事件"))
-//                .andExpect(jsonPath("$.keyword").value("更新关键词"))
-//                .andExpect(status().isOk());
-//    }
-//
-//    @Test
-//    void should_only_update_eventName_when_keyword_is_null() throws Exception {
-//        RsEvent rsEvent = new RsEvent("更新事件", null, null);
-//        String postBody = objectMapper.writeValueAsString(rsEvent);
-//
-//        mockMvc.perform(put("/rs/0").content(postBody).contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk());
-//        mockMvc.perform(get("/rs/0"))
-//                .andExpect(jsonPath("$.eventName").value("更新事件"))
-//                .andExpect(jsonPath("$.keyword").value("关键词1"))
-//                .andExpect(status().isOk());
-//    }
-//
-//    @Test
-//    void should_only_update_keyword_when_eventName_is_null() throws Exception {
-//        RsEvent rsEvent = new RsEvent(null, "更新关键词", null);
-//        String postBody = objectMapper.writeValueAsString(rsEvent);
-//
-//        mockMvc.perform(put("/rs/0").content(postBody).contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk());
-//        mockMvc.perform(get("/rs/0"))
-//                .andExpect(jsonPath("$.eventName").value("第一条事件"))
-//                .andExpect(jsonPath("$.keyword").value("更新关键词"))
-//                .andExpect(status().isOk());
-//    }
+
+    @Test
+    void should_update_eventName_and_keyword_when_both_not_null() throws Exception {
+        RsEventEntitiy entitiy = rsEventEntitiys.get(0);
+        RsEvent rsEvent = new RsEvent("update trend", "update keyword", entitiy.getUserId());
+        String postBody = objectMapper.writeValueAsString(rsEvent);
+
+        mockMvc.perform(patch("/rs/"+entitiy.getId()).content(postBody).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/rs/"+entitiy.getId()))
+                .andExpect(jsonPath("$.eventName").value(rsEvent.getEventName()))
+                .andExpect(jsonPath("$.keyword").value(rsEvent.getKeyword()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void should_only_update_eventName_when_keyword_is_null() throws Exception {
+        RsEventEntitiy entitiy = rsEventEntitiys.get(0);
+        RsEvent rsEvent = new RsEvent("update trend", null, entitiy.getUserId());
+        String postBody = objectMapper.writeValueAsString(rsEvent);
+
+        mockMvc.perform(patch("/rs/"+entitiy.getId()).content(postBody).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/rs/"+entitiy.getId()))
+                .andExpect(jsonPath("$.eventName").value(rsEvent.getEventName()))
+                .andExpect(jsonPath("$.keyword").value(entitiy.getKeyword()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void should_only_update_keyword_when_eventName_is_null() throws Exception {
+        RsEventEntitiy entitiy = rsEventEntitiys.get(0);
+        RsEvent rsEvent = new RsEvent(null, "update keyword", entitiy.getUserId());
+        String postBody = objectMapper.writeValueAsString(rsEvent);
+
+        mockMvc.perform(patch("/rs/"+entitiy.getId()).content(postBody).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        mockMvc.perform(get("/rs/"+entitiy.getId()))
+                .andExpect(jsonPath("$.eventName").value(entitiy.getEventName()))
+                .andExpect(jsonPath("$.keyword").value(rsEvent.getKeyword()))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void should_return_400_when_update_given_error_userId() throws Exception {
+        RsEventEntitiy entitiy = rsEventEntitiys.get(0);
+        RsEvent rsEvent = new RsEvent("update trend", "update keyword", 1000);
+        String postBody = objectMapper.writeValueAsString(rsEvent);
+
+        mockMvc.perform(patch("/rs/"+entitiy.getId()).content(postBody).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
 //
 //    @Test
 //    void should_success_when_delete_rs_by_index() throws Exception {

@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
@@ -77,18 +78,25 @@ public class RsController {
     private boolean isRegistered(Integer userId) {
         return userRepository.findById(userId).isPresent();
     }
-//
-//    @PutMapping("/rs/{index}")
-//    public ResponseEntity<Void> updateRsEvent(@PathVariable int index, @RequestBody RsEvent newRsEvent) {
-//        RsEvent oldRsEvent = rsList.get(index);
-//        String newEventName = newRsEvent.getEventName();
-//        String newKeyword = newRsEvent.getKeyword();
-//        if (newEventName != null)
-//            oldRsEvent.setEventName(newEventName);
-//        if (newKeyword != null)
-//            oldRsEvent.setKeyword(newKeyword);
-//        return ResponseEntity.status(HttpStatus.OK).body(null);
-//    }
+
+    @PatchMapping("/rs/{id}")
+    public ResponseEntity updateRsEvent(@PathVariable Integer id, @RequestBody RsEvent rsEvent) {
+        Optional<RsEventEntitiy> entitiyOptional = rsEventRepository.findById(id);
+        if (entitiyOptional.isPresent() && rsEvent.getUserId() != null
+                && entitiyOptional.get().getUserId().equals(rsEvent.getUserId())) {
+            RsEventEntitiy entitiy = entitiyOptional.get();
+            if (!StringUtils.isEmpty(rsEvent.getEventName())) {
+                entitiy.setEventName(rsEvent.getEventName());
+            }
+            if (!StringUtils.isEmpty(rsEvent.getKeyword())) {
+                entitiy.setKeyword(rsEvent.getKeyword());
+            }
+            rsEventRepository.save(entitiy);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 //
 //    @DeleteMapping("/rs/{index}")
 //    public ResponseEntity<Void> deleteRsEvent(@PathVariable int index) {
