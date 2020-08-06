@@ -9,3 +9,4 @@
 2020-08-06 20:26:08,615 ERROR com.thoughtworks.rslist.api.UserController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid user
 2020-08-06 20:30:55,342 ERROR com.thoughtworks.rslist.api.UserController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid user
 2020-08-06 20:34:51,289 ERROR com.thoughtworks.rslist.api.UserController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid user
+2020-08-06 20:51:31,986 ERROR com.thoughtworks.rslist.api.UserController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid user

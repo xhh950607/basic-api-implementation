@@ -48,8 +48,7 @@ public class RsController {
     }
 
 //    @GetMapping("/rs/list")
-//    public ResponseEntity<List<RsEvent>> getRsListBetween(@RequestParam(required = false) Integer start,
-//                                                          @RequestParam(required = false) Integer end) throws InvalidIndexException {
+//    public ResponseEntity<List<RsEvent>> getRsListBetween() throws InvalidIndexException {
 //        List<RsEvent> res;
 //        if (start == null || end == null)
 //            res = rsList;
@@ -60,21 +59,24 @@ public class RsController {
 //        return ResponseEntity.status(HttpStatus.OK).body(res);
 //    }
 
-//    @PostMapping("/rs")
-//    public ResponseEntity<Void> addRsEvent(@RequestBody @Valid RsEvent rsEvent) {
-//        User user = rsEvent.getUser();
-//        if (!isRegistered(user)) {
-//            UserController.userList.add(user);
-//        }
-//        rsList.add(rsEvent);
-//        return ResponseEntity.status(HttpStatus.CREATED)
-//                .header("index", rsList.indexOf(rsEvent) + "")
-//                .body(null);
-//    }
+    @PostMapping("/rs")
+    public ResponseEntity addRsEvent(@RequestBody @Valid RsEvent rsEvent) {
+        if (isRegistered(rsEvent.getUserId())) {
+            RsEventEntitiy entitiy = RsEventEntitiy.builder()
+                    .eventName(rsEvent.getEventName())
+                    .keyword(rsEvent.getKeyword())
+                    .userId(rsEvent.getUserId())
+                    .build();
+            rsEventRepository.save(entitiy);
+            return ResponseEntity.created(null).build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 
-//    private boolean isRegistered(Integer userId) {
-//        return userRepository.findById(userId).isPresent();
-//    }
+    private boolean isRegistered(Integer userId) {
+        return userRepository.findById(userId).isPresent();
+    }
 //
 //    @PutMapping("/rs/{index}")
 //    public ResponseEntity<Void> updateRsEvent(@PathVariable int index, @RequestBody RsEvent newRsEvent) {

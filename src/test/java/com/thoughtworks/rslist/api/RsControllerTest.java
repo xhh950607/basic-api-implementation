@@ -6,6 +6,7 @@ import com.thoughtworks.rslist.entity.RsEventEntitiy;
 import com.thoughtworks.rslist.entity.UserEntity;
 import com.thoughtworks.rslist.repository.RsEventRepository;
 import com.thoughtworks.rslist.repository.UserRepository;
+import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +63,7 @@ class RsControllerTest {
     @Test
     void should_get_one_rs_given_index() throws Exception {
         RsEventEntitiy rsEventEntitiy = rsEventEntitiys.get(0);
-        mockMvc.perform(get("/rs/"+rsEventEntitiy.getId()))
+        mockMvc.perform(get("/rs/" + rsEventEntitiy.getId()))
                 .andExpect(jsonPath("$.eventName").value(rsEventEntitiy.getEventName()))
                 .andExpect(jsonPath("$.keyword").value(rsEventEntitiy.getKeyword()))
                 .andExpect(jsonPath("$.userId").value(rsEventEntitiy.getUserId()))
@@ -71,66 +72,47 @@ class RsControllerTest {
 
     @Test
     void should_return_400_invalid_id_when_get_one_given_invalid_id() throws Exception {
-        mockMvc.perform(get("/rs/"+100))
+        mockMvc.perform(get("/rs/" + 100))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.error").value("invalid id"));
     }
-//
-//    @Test
+
+    //    @Test
 //    void should_get_rs_list() throws Exception {
 //        mockMvc.perform(get("/rs/list"))
-//                .andExpect(jsonPath("$[0].eventName").value("第一条事件"))
-//                .andExpect(jsonPath("$[0].keyword").value("关键词1"))
-//                .andExpect(jsonPath("$[0].user").doesNotHaveJsonPath())
-//                .andExpect(jsonPath("$[1].eventName").value("第二条事件"))
-//                .andExpect(jsonPath("$[1].keyword").value("关键词2"))
-//                .andExpect(jsonPath("$[1].user").doesNotHaveJsonPath())
-//                .andExpect(jsonPath("$[2].eventName").value("第三条事件"))
-//                .andExpect(jsonPath("$[2].keyword").value("关键词3"))
-//                .andExpect(jsonPath("$[2].user").doesNotHaveJsonPath())
+//                .andExpect(jsonPath("$[0].eventName").value(rsEventEntitiys.get(0).getEventName()))
+//                .andExpect(jsonPath("$[0].keyword").value(rsEventEntitiys.get(0).getKeyword()))
+//                .andExpect(jsonPath("$[0].userId").value(rsEventEntitiys.get(0).getUserId()))
+//                .andExpect(jsonPath("$[1].eventName").value(rsEventEntitiys.get(1).getEventName()))
+//                .andExpect(jsonPath("$[1].keyword").value(rsEventEntitiys.get(1).getKeyword()))
+//                .andExpect(jsonPath("$[1].userId").value(rsEventEntitiys.get(1).getUserId()))
+//                .andExpect(jsonPath("$[2].eventName").value(rsEventEntitiys.get(2).getEventName()))
+//                .andExpect(jsonPath("$[2].keyword").value(rsEventEntitiys.get(2).getKeyword()))
+//                .andExpect(jsonPath("$[2].userId").value(rsEventEntitiys.get(2).getUserId()))
 //                .andExpect(status().isOk());
 //    }
 //
-//    @Test
-//    void should_get_rs_list_given_start_and_end() throws Exception {
-//        mockMvc.perform(get("/rs/list?start=1&end=3"))
-//                .andExpect(jsonPath("$[0].eventName").value("第二条事件"))
-//                .andExpect(jsonPath("$[0].keyword").value("关键词2"))
-//                .andExpect(jsonPath("$[0].user").doesNotHaveJsonPath())
-//                .andExpect(jsonPath("$[1].eventName").value("第三条事件"))
-//                .andExpect(jsonPath("$[1].keyword").value("关键词3"))
-//                .andExpect(jsonPath("$[1].user").doesNotHaveJsonPath())
-//                .andExpect(status().isOk());
-//    }
-//
-//    @Test
-//    void should_return_400_invalid_request_param_when_get_list_given_out_bound_start_or_end() throws Exception {
-//        mockMvc.perform(get("/rs/list?start=1&end=4"))
-//                .andExpect(status().isBadRequest())
-//                .andExpect(jsonPath("$.error").value("invalid request param"));
-//    }
-//
-//    @Test
-//    void should_only_add_rs_when_add_given_registered_user() throws Exception {
-//        String postBody = "{\"eventName\":\"第四条事件\",\"keyword\":\"关键词4\",\"user\":{\"userName\":\"Bob\",\"age\":20,\"gender\":\"male\",\"email\":\"234@qq.com\",\"phone\":\"12345678902\"}}";
-//
-//        mockMvc.perform(post("/rs").content(postBody).contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isCreated())
-//                .andExpect(header().string("index", "3"));
-//        Assertions.assertEquals(4, RsController.rsList.size());
-//        Assertions.assertEquals(1, UserController.userList.size());
-//    }
-//
-//    @Test
-//    void should_add_rs_and_add_user_when_add_given_not_registered_user() throws Exception {
-//        String postBody = "{\"eventName\":\"第四条事件\",\"keyword\":\"关键词4\",\"user\":{\"userName\":\"Tom\",\"age\":19,\"gender\":\"male\",\"email\":\"123@qq.com\",\"phone\":\"12345678901\"}}";
-//
-//        mockMvc.perform(post("/rs").content(postBody).contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isCreated())
-//                .andExpect(header().string("index", "3"));
-//        Assertions.assertEquals(4, RsController.rsList.size());
-//        Assertions.assertEquals(2, UserController.userList.size());
-//    }
+    @Test
+    void should_only_add_rs_when_add_given_registered_user() throws Exception {
+        RsEvent rsEvent = new RsEvent("trend 4", "keyword 4", userEntity.getId());
+        String postBody = objectMapper.writeValueAsString(rsEvent);
+
+        mockMvc.perform(post("/rs").content(postBody).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated());
+        RsEventEntitiy rsEventEntitiy = rsRepository.findById(4).get();
+        assertEquals(rsEvent.getEventName(), rsEventEntitiy.getEventName());
+        assertEquals(rsEvent.getKeyword(), rsEventEntitiy.getKeyword());
+        assertEquals(rsEvent.getUserId(), rsEventEntitiy.getUserId());
+    }
+
+    @Test
+    void should_return_400_when_add_given_not_registered_user() throws Exception {
+        RsEvent rsEvent = new RsEvent("trend 4", "keyword 4", userEntity.getId());
+        String postBody = objectMapper.writeValueAsString(rsEvent);
+
+        mockMvc.perform(post("/rs").content(postBody).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
 //
 //    @Test
 //    void should_return_400_invalid_param_when_add_given_invalid_rs() throws Exception {
