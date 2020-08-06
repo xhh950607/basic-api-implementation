@@ -1,0 +1,3 @@
+2020-08-05 23:45:03,218 ERROR com.thoughtworks.rslist.api.RsController [http-nio-8080-exec-2] class com.thoughtworks.rslist.exception.InvalidIndexException:invalid request param
+2020-08-05 23:45:10,627 ERROR com.thoughtworks.rslist.api.RsController [http-nio-8080-exec-4] class com.thoughtworks.rslist.exception.InvalidIndexException:invalid index
+2020-08-05 23:46:41,239 ERROR com.thoughtworks.rslist.api.UserController [http-nio-8080-exec-8] class org.springframework.web.bind.MethodArgumentNotValidException: invalid user
