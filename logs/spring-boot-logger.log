@@ -3837,3 +3837,8 @@ Caused by: org.hibernate.MappingException: Repeated column in mapping for entity
 	... 107 common frames omitted
 2020-08-06 21:21:50,371 ERROR com.thoughtworks.rslist.api.UserController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid user
 2020-08-06 21:41:29,206 ERROR com.thoughtworks.rslist.api.UserController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid user
+2020-08-06 21:45:48,301 ERROR com.thoughtworks.rslist.api.UserController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid user
+2020-08-06 21:47:01,789 ERROR com.thoughtworks.rslist.api.RsController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid param
+2020-08-06 21:47:01,820 ERROR com.thoughtworks.rslist.api.RsController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid param
+2020-08-06 21:47:01,975 ERROR com.thoughtworks.rslist.api.RsController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid param
+2020-08-06 21:47:02,035 ERROR com.thoughtworks.rslist.api.UserController [Test worker] class org.springframework.web.bind.MethodArgumentNotValidException: invalid user

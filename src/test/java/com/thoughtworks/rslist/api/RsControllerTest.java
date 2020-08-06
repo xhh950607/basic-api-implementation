@@ -135,43 +135,36 @@ class RsControllerTest {
         assertEquals(0, userRepository.findAll().size());
         assertEquals(0, rsRepository.findAll().size());
     }
-//
-//    @Test
-//    void should_return_400_invalid_param_when_add_given_invalid_rs() throws Exception {
-//        RsEvent rsEvent = new RsEvent("新增事件", "关键词", null);
-//        String postBody = objectMapper.writeValueAsString(rsEvent);
-//
-//        mockMvc.perform(post("/rs").content(postBody).contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isBadRequest())
-//                .andExpect(jsonPath("$.error").value("invalid param"));
-//    }
-//
-//    @Test
-//    void should_bad_request_when_add_given_null_user() throws Exception {
-//        RsEvent rsEvent = new RsEvent("新增事件", "关键词", null);
-//        String postBody = objectMapper.writeValueAsString(rsEvent);
-//
-//        mockMvc.perform(post("/rs").content(postBody).contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isBadRequest());
-//    }
-//
-//    @Test
-//    void should_bad_request_when_add_given_null_keyword() throws Exception {
-//        RsEvent rsEvent = new RsEvent("新增事件", null, UserController.userList.get(0));
-//        String postBody = objectMapper.writeValueAsString(rsEvent);
-//
-//        mockMvc.perform(post("/rs").content(postBody).contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isBadRequest());
-//    }
-//
-//    @Test
-//    void should_bad_request_when_add_given_null_event_name() throws Exception {
-//        RsEvent rsEvent = new RsEvent(null, "关键字", UserController.userList.get(0));
-//        String postBody = objectMapper.writeValueAsString(rsEvent);
-//
-//        mockMvc.perform(post("/rs").content(postBody).contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isBadRequest());
-//    }_
+
+    @Test
+    void should_return_400_invalid_param_when_add_given_null_user_id() throws Exception {
+        RsEvent rsEvent = new RsEvent("trend 4", "keyword 4", null);
+        String postBody = objectMapper.writeValueAsString(rsEvent);
+
+        mockMvc.perform(post("/rs").content(postBody).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("invalid param"));
+    }
+
+    @Test
+    void should_return_400_invalid_param_when_add_given_null_keyword() throws Exception {
+        RsEvent rsEvent = new RsEvent("trend 4", null, userEntity.getId());
+        String postBody = objectMapper.writeValueAsString(rsEvent);
+
+        mockMvc.perform(post("/rs").content(postBody).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("invalid param"));
+    }
+
+    @Test
+    void should_return_400_invalid_param_when_add_given_null_event_name() throws Exception {
+        RsEvent rsEvent = new RsEvent(null, "keyword 4", userEntity.getId());
+        String postBody = objectMapper.writeValueAsString(rsEvent);
+
+        mockMvc.perform(post("/rs").content(postBody).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("invalid param"));
+    }
 
     @Test
     void should_update_eventName_and_keyword_when_both_not_null() throws Exception {
@@ -179,9 +172,9 @@ class RsControllerTest {
         RsEvent rsEvent = new RsEvent("update trend", "update keyword", entitiy.getUserId());
         String postBody = objectMapper.writeValueAsString(rsEvent);
 
-        mockMvc.perform(patch("/rs/"+entitiy.getId()).content(postBody).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(patch("/rs/" + entitiy.getId()).content(postBody).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-        mockMvc.perform(get("/rs/"+entitiy.getId()))
+        mockMvc.perform(get("/rs/" + entitiy.getId()))
                 .andExpect(jsonPath("$.eventName").value(rsEvent.getEventName()))
                 .andExpect(jsonPath("$.keyword").value(rsEvent.getKeyword()))
                 .andExpect(status().isOk());
@@ -193,9 +186,9 @@ class RsControllerTest {
         RsEvent rsEvent = new RsEvent("update trend", null, entitiy.getUserId());
         String postBody = objectMapper.writeValueAsString(rsEvent);
 
-        mockMvc.perform(patch("/rs/"+entitiy.getId()).content(postBody).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(patch("/rs/" + entitiy.getId()).content(postBody).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-        mockMvc.perform(get("/rs/"+entitiy.getId()))
+        mockMvc.perform(get("/rs/" + entitiy.getId()))
                 .andExpect(jsonPath("$.eventName").value(rsEvent.getEventName()))
                 .andExpect(jsonPath("$.keyword").value(entitiy.getKeyword()))
                 .andExpect(status().isOk());
@@ -207,9 +200,9 @@ class RsControllerTest {
         RsEvent rsEvent = new RsEvent(null, "update keyword", entitiy.getUserId());
         String postBody = objectMapper.writeValueAsString(rsEvent);
 
-        mockMvc.perform(patch("/rs/"+entitiy.getId()).content(postBody).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(patch("/rs/" + entitiy.getId()).content(postBody).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-        mockMvc.perform(get("/rs/"+entitiy.getId()))
+        mockMvc.perform(get("/rs/" + entitiy.getId()))
                 .andExpect(jsonPath("$.eventName").value(entitiy.getEventName()))
                 .andExpect(jsonPath("$.keyword").value(rsEvent.getKeyword()))
                 .andExpect(status().isOk());
@@ -221,7 +214,7 @@ class RsControllerTest {
         RsEvent rsEvent = new RsEvent("update trend", "update keyword", 1000);
         String postBody = objectMapper.writeValueAsString(rsEvent);
 
-        mockMvc.perform(patch("/rs/"+entitiy.getId()).content(postBody).contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(patch("/rs/" + entitiy.getId()).content(postBody).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 //
