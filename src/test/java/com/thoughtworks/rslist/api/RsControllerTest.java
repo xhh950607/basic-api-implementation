@@ -299,6 +299,7 @@ class RsControllerTest {
         mockMvc.perform(get("/rs/votes?startTime=" + start.toString() + "&endTime=" + end.toString()))
                 .andExpect(jsonPath("$[0].voteNum").value(v2.getVoteNum()))
                 .andExpect(jsonPath("$[0].id").value(v2.getId()))
+                .andExpect(jsonPath("$.length()").value(1))
                 .andExpect(status().isOk());
     }
 }
