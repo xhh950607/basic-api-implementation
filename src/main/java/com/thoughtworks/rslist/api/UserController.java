@@ -24,7 +24,7 @@ public class UserController {
 
     Logger logger = LoggerFactory.getLogger(RsController.class);
 
-    @GetMapping("/users")
+    @GetMapping("/user")
     public ResponseEntity<List<User>> getUsers() {
         List<UserEntity> userEntities = userRepository.findAll();
         List<User> users = userEntities.stream().map(

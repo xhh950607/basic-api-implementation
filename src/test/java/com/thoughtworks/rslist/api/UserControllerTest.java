@@ -34,7 +34,7 @@ class UserControllerTest {
     @Test
     void should_get_user_list() throws Exception {
         UserEntity userEntity = saveOneUser();
-        mockMvc.perform(get("/users"))
+        mockMvc.perform(get("/user"))
                 .andExpect(jsonPath("$[0].user_name").value(userEntity.getName()))
                 .andExpect(jsonPath("$[0].user_age").value(userEntity.getAge()))
                 .andExpect(jsonPath("$[0].user_gender").value(userEntity.getGender()))

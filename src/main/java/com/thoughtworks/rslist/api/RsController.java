@@ -57,7 +57,7 @@ public class RsController {
         }
     }
 
-    @GetMapping("/rs/list")
+    @GetMapping("/rs")
     public ResponseEntity<List<RsEvent>> getRsList() {
         List<RsEventEntitiy> rsEventEntitiys = rsEventRepository.findAll();
         List<RsEvent> rsEvents = rsEventEntitiys.stream()
@@ -117,7 +117,7 @@ public class RsController {
     }
 
     @Transactional
-    @PostMapping("/rs/vote/{rsEventId}")
+    @PostMapping("/rs/{rsEventId}/vote")
     public ResponseEntity vote(@PathVariable Integer rsEventId, @RequestBody @Valid Vote vote) {
         Optional<RsEventEntitiy> rsEventEntitiyOptional = rsEventRepository.findById(rsEventId);
         if (!rsEventEntitiyOptional.isPresent())
@@ -148,8 +148,8 @@ public class RsController {
         return ResponseEntity.created(null).build();
     }
 
-    @GetMapping("/rs/votes")
-    public ResponseEntity<List<Vote>> getVoteList(@RequestParam String startTime, @RequestParam String endTime) {
+    @GetMapping("/vote")
+    public ResponseEntity<List<Vote>> getVoteListBetweenTime(@RequestParam String startTime, @RequestParam String endTime) {
         LocalDateTime start = LocalDateTime.parse(startTime);
         LocalDateTime end = LocalDateTime.parse(endTime);
         List<VoteEntity> voteEntities = voteRepository.findAllByVoteTimeBetween(start, end);

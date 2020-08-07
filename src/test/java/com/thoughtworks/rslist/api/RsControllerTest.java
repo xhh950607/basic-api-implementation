@@ -100,7 +100,7 @@ class RsControllerTest {
 
     @Test
     void should_get_rs_list() throws Exception {
-        mockMvc.perform(get("/rs/list"))
+        mockMvc.perform(get("/rs"))
                 .andExpect(jsonPath("$[0].eventName").value(rsEventEntitiys.get(0).getEventName()))
                 .andExpect(jsonPath("$[0].keyword").value(rsEventEntitiys.get(0).getKeyword()))
                 .andExpect(jsonPath("$[0].id").value(rsEventEntitiys.get(0).getId()))
@@ -233,7 +233,7 @@ class RsControllerTest {
     }
 
     @Test
-    void should_related_vote_when__rs_by_id() throws Exception {
+    void should_delete__rs_by_id() throws Exception {
         RsEventEntitiy rsEventEntitiy = rsEventEntitiys.get(0);
 
         mockMvc.perform(delete("/rs/" + rsEventEntitiy.getId()))
@@ -252,7 +252,7 @@ class RsControllerTest {
         Integer oldUserVoteNum = userEntity.getVoteNum();
         Integer oldRsEventVoteNum = rsEventEntitiy.getVoteNum();
 
-        mockMvc.perform(post("/rs/vote/" + rsEventEntitiy.getId())
+        mockMvc.perform(post("/rs/" + rsEventEntitiy.getId()+"/vote")
                 .content(postStr)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isCreated());
@@ -271,7 +271,7 @@ class RsControllerTest {
         Vote vote = new Vote(15, userEntity.getId(), LocalDateTime.now().toString());
         String postStr = objectMapper.writeValueAsString(vote);
 
-        mockMvc.perform(post("/rs/vote/" + rsEventEntitiys.get(0).getId())
+        mockMvc.perform(post("/rs/" + rsEventEntitiys.get(0).getId()+"/vote")
                 .content(postStr)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
@@ -296,7 +296,7 @@ class RsControllerTest {
         LocalDateTime start = LocalDateTime.of(2020, 10, 11, 10, 10);
         LocalDateTime end = LocalDateTime.of(2020, 11, 12, 11, 11);
 
-        mockMvc.perform(get("/rs/votes?startTime=" + start.toString() + "&endTime=" + end.toString()))
+        mockMvc.perform(get("/vote?startTime=" + start.toString() + "&endTime=" + end.toString()))
                 .andExpect(jsonPath("$[0].voteNum").value(v2.getVoteNum()))
                 .andExpect(jsonPath("$[0].id").value(v2.getId()))
                 .andExpect(jsonPath("$.length()").value(1))
