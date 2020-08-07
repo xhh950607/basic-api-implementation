@@ -293,11 +293,12 @@ class RsControllerTest {
                 .userId(userEntity.getId())
                 .build());
 
-        mockMvc.perform(get("/rs/votes?startTime=" + v1.getVoteTime().toString() + "&endTime=" + v2.getVoteTime().toString()))
-                .andExpect(jsonPath("$[0].voteNum").value(v1.getVoteNum()))
-                .andExpect(jsonPath("$[0].id").value(v1.getId()))
-                .andExpect(jsonPath("$[1].voteNum").value(v2.getVoteNum()))
-                .andExpect(jsonPath("$[1].id").value(v2.getId()))
+        LocalDateTime start = LocalDateTime.of(2020, 10, 11, 10, 10);
+        LocalDateTime end = LocalDateTime.of(2020, 11, 12, 11, 11);
+
+        mockMvc.perform(get("/rs/votes?startTime=" + start.toString() + "&endTime=" + end.toString()))
+                .andExpect(jsonPath("$[0].voteNum").value(v2.getVoteNum()))
+                .andExpect(jsonPath("$[0].id").value(v2.getId()))
                 .andExpect(status().isOk());
     }
 }
