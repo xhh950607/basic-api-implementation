@@ -11,9 +11,11 @@ import com.thoughtworks.rslist.exception.InvalidIndexException;
 import com.thoughtworks.rslist.repository.RsEventRepository;
 import com.thoughtworks.rslist.repository.UserRepository;
 import com.thoughtworks.rslist.repository.VoteRepository;
+import com.thoughtworks.rslist.service.RsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +32,13 @@ import java.util.stream.Stream;
 
 @RestController
 public class RsController {
+
+//    @Autowired
+//    RsService service;
+    @Bean
+    public RsService rsService() {
+        return new RsService();
+    }
 
     @Autowired
     UserRepository userRepository;
