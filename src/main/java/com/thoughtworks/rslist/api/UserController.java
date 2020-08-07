@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -19,10 +20,13 @@ import java.util.stream.Collectors;
 @RestController
 public class UserController {
 
-    @Autowired
     UserRepository userRepository;
 
     Logger logger = LoggerFactory.getLogger(RsController.class);
+
+    public UserController(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @GetMapping("/users")
     public ResponseEntity<List<User>> getUsers() {

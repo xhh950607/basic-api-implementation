@@ -40,14 +40,17 @@ public class RsController {
         return new RsService();
     }
 
-    @Autowired
     UserRepository userRepository;
-    @Autowired
     RsEventRepository rsEventRepository;
-    @Autowired
     VoteRepository voteRepository;
 
     Logger logger = LoggerFactory.getLogger(RsController.class);
+
+    public RsController(UserRepository userRepository, RsEventRepository rsEventRepository, VoteRepository voteRepository) {
+        this.userRepository = userRepository;
+        this.rsEventRepository = rsEventRepository;
+        this.voteRepository = voteRepository;
+    }
 
     @GetMapping("/rs/{id}")
     public ResponseEntity getOneRsById(@PathVariable Integer id) throws InvalidIndexException {
